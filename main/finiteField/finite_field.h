@@ -73,7 +73,7 @@ namespace FiniteField {
 }
 
 //template for module (characteristic) of field
-#include "polynomial.h"
+#include "polynom/polynomial.h"
 #include "polynomial_mod_2.h"
 
 

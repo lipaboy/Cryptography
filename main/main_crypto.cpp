@@ -8,7 +8,7 @@ using namespace FiniteField;
 
 int main(void)
 {
-	/*try {
+	try {
 
 		Polynomial<5> p1,
 					p2;
@@ -28,7 +28,7 @@ int main(void)
 	}
 	catch (runtime_error exp){
 		cout << exp.what();
-	}*/
+	}
 
 	return 0;
 }

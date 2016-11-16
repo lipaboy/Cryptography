@@ -5,59 +5,46 @@
 #ifndef CRYPTOGRAPHY_POLYNOMIAL_H
 #define CRYPTOGRAPHY_POLYNOMIAL_H
 
-#include "finite_field.h"
+#include <vector>
+#include <iostream>
 
-namespace FiniteField {
+namespace CryptographyMath {
 
 	//----------------Too many memory copying-----------------------Unique_ptr--//
 
-	//template for module (characteristic) of field
-	template<int modulus, class T = int>
+	template<class T>
 	class Polynomial {
 
-	public:
-		enum Customization {
-			AutoCastToFieldElements,
-			CastToFieldElementsByHand
-		};
 	private:
 		vector<T> polynom;
-		Customization custom;
 
 	public:
 		void move(Polynomial &&temp) {
 			polynom = move(temp.polynom);
-			custom = temp.custom;
 		}
 
 		explicit
-		Polynomial(Customization cust = AutoCastToFieldElements) : custom(cust) {
-			if (modulus < 2)
-				throw WrongTemplateParameterValueException();
-
+		Polynomial(){
 			polynom.push_back(0);
 		}
 
 		explicit
-		Polynomial(const vector<T> &vec, Customization cust = AutoCastToFieldElements) : custom(cust) {
-			if (modulus < 2)
-				throw WrongTemplateParameterValueException();
+		Polynomial(const vector<T> &vec) {
 
 			for (int i = 0; i < vec.size(); i++)
-				polynom.push_back(ConversionToFieldElements::getFieldElement(vec[i], modulus));
+				polynom.push_back(vec[i]);
 		}
 
 		explicit
-		Polynomial(const size_t size, Customization cust = AutoCastToFieldElements)
-				: custom(cust), polynom(size) {}
+		Polynomial(const size_t size) : polynom(size) {}
 		//copy constructor
-		Polynomial(const Polynomial &obj) : custom(obj.custom), polynom(obj.polynom) {}
+		Polynomial(const Polynomial &obj) : polynom(obj.polynom) {}
 		//move constructor
 		Polynomial(Polynomial &&temp) { this->move(temp); }
 
 		/*---------------Operators-------------*/
 
-
+//why cannot do it?
 		/*const Polynomial& operator= (Polynomial &&temp) {
 			if ((*this) != temp) {
 				cout << &temp.polynom[0] << " ";
@@ -73,7 +60,6 @@ namespace FiniteField {
 				cout << &obj.polynom[0] << " ";
 				polynom = obj.polynom;
 				cout << &polynom[0] << " ";
-				custom = obj.custom;
 			}
 			return (*this);
 		}
@@ -83,16 +69,12 @@ namespace FiniteField {
 			const Polynomial &shortPolynom = (size() <= obj.size()) ? (*this) : obj;
 			Polynomial sum(longPolynom);
 
-			if (custom == AutoCastToFieldElements)
-				for (int i = 0; i < shortPolynom.size(); i++)
-					sum[i] = ConversionToFieldElements::getFieldElement(sum[i] + shortPolynom[i], modulus);
-			else
-				for (int i = 0; i < shortPolynom.size(); i++)
-					sum[i] += shortPolynom[i];
+			for (int i = 0; i < shortPolynom.size(); i++)
+				sum[i] += shortPolynom[i];
 
 							//the power of polynom can decrease by addition
 			size_t newSize = sum.size();
-			for (size_t i = sum.size() - 1; (i >= 0) && (sum[i] % modulus == 0); i--)
+			for (size_t i = sum.size() - 1; (i >= 0) && (sum[i] == 0); i--)
 				--newSize;
 
 			sum.resize(newSize);
@@ -100,7 +82,7 @@ namespace FiniteField {
 			return sum;
 		};
 
-		Polynomial operator- () const {		//I don't know cast To Field Elements or not
+		Polynomial operator- () const {
 			Polynomial inverse(size());
 
 			for (int i = 0; i < size(); i++)
@@ -118,9 +100,6 @@ namespace FiniteField {
 				for (int j = 0; j < obj.size(); j++)
 					mul[i + j] += (*this)[i] * obj[j];
 
-			if (custom == AutoCastToFieldElements)
-				mul.castToFieldElems();
-
 			return mul;
 		}
 
@@ -129,7 +108,7 @@ namespace FiniteField {
 				throw out_of_range("Polynomial Exception: out of range");
 			return polynom[i];
 		}
-				//double code - bad!!!
+				//code duplication - bad!!!
 		T &operator[](const int i) {
 			if (i < 0 || i >= polynom.size())
 				throw out_of_range("Polynomial Exception: out of range");
@@ -141,7 +120,7 @@ namespace FiniteField {
 				return false;
 
 			for (int i = 0; i < size(); i++)
-				if (static_cast<T>(0) != ConversionToFieldElements::getFieldElement(polynom[i] - obj[i], modulus))
+				if (static_cast<T>(0) != polynom[i] - obj[i])
 					return false;
 			return true;
 		}
@@ -150,21 +129,14 @@ namespace FiniteField {
 			return (!((*this) == obj));
 		}
 
-
-		void castToFieldElems() {
-			for (int i = 0; i < size(); i++)
-				polynom[i] = ConversionToFieldElements::getFieldElement(polynom[i], modulus);
-		}
-
-		void push_back(T elem) { polynom.push_back(ConversionToFieldElements::getFieldElement(elem, modulus)); }
+		void push_back(T elem) { polynom.push_back(elem); }
 
 		const size_t size() const { return polynom.size(); }
 
-		void changeCustom(const Customization cust) { custom = cust; }
-
 		void resize(const size_t size) { polynom.resize(size); }
 
-		void print(ostream &o = cout, const char separator = ' ') const {
+		//I need different representaions of polynom
+		void print(ostream &o = cout, const char delimiter = ' ') const {
 			//OutputVector::print(polynom, o, separator);
 
 			if (size() > 1)
@@ -174,7 +146,7 @@ namespace FiniteField {
 				if (i == 0)
 					o << polynom[i];
 				else if (polynom[i] != 0) {
-					o << separator << "+" << separator;
+					o << delimiter << "+" << delimiter;
 					if (polynom[i] != 1)
 						o << polynom[i];
 					o << "x";
@@ -190,12 +162,12 @@ namespace FiniteField {
 
 		/*---------------Friendship-----------------*/
 
-		template<int m, class S>
-		friend ostream &operator<< (ostream &o, const Polynomial<m, S> &p);
+		template<class S>
+		friend ostream &operator<< (ostream &o, const Polynomial<S> &p);
 	};
 
-	template <int modulus, class S>
-	ostream &operator<< (ostream &o, const Polynomial<modulus, S> &p){
+	template <class S>
+	ostream &operator<< (ostream &o, const Polynomial<S> &p){
 		p.print(o);
 		return o;
 	}

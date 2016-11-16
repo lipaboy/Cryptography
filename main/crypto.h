@@ -10,8 +10,14 @@
 #include <memory>
 #include <cmath>
 #include "iovector/iovector.h"
+
+#include "polynom/polynomial.h"
+namespace CryptographyMath {
+
 #include <complex>
 #include "finiteField/finite_field.h"
+
+}
 
 
 
