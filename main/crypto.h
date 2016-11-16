@@ -12,12 +12,11 @@
 #include "iovector/iovector.h"
 
 #include "polynom/polynomial.h"
-namespace CryptographyMath {
 
-#include <complex>
+//#include <complex>
 #include "finiteField/finite_field.h"
 
-}
+
 
 
 

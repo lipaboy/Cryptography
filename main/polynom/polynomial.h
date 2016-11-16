@@ -12,7 +12,7 @@ namespace CryptographyMath {
 
 	//----------------Too many memory copying-----------------------Unique_ptr--//
 
-	template<class T>
+	template <class T>
 	class Polynomial {
 
 	private:
@@ -82,6 +82,8 @@ namespace CryptographyMath {
 			return sum;
 		};
 
+		const Polynomial& operator+= (const Polynomial &obj) { return ((*this) = ((*this) + obj)); }
+
 		Polynomial operator- () const {
 			Polynomial inverse(size());
 
@@ -102,6 +104,8 @@ namespace CryptographyMath {
 
 			return mul;
 		}
+
+		const Polynomial& operator*= (const Polynomial &obj) { return ((*this) = ((*this) * obj)); }
 
 		const T &operator[](const int i) const {
 			if (i < 0 || i >= polynom.size())
