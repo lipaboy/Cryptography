@@ -3,7 +3,7 @@
 //
 
 #include <cmath>
-#include "jacoby.h"
+#include "number_properties_algorithms.h"
 
 namespace PropertiesOfNumbers {
 

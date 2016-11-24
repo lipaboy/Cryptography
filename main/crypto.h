@@ -5,19 +5,19 @@
 #ifndef CRYPTOGRAPHY_CRYPTO_H
 #define CRYPTOGRAPHY_CRYPTO_H
 
-#include <iostream>
 #include <vector>
-#include <memory>
-#include <cmath>
+#include <iostream>
 #include "iovector/iovector.h"
-
-#include "polynom/polynomial.h"
-
-//#include <complex>
+#include <complexNumbers/complex_numbers.h>
 #include "finiteField/finite_field.h"
+#include "polynom/polynom.h"
 
+using namespace FiniteField;
+using namespace Polynomial;
 
+namespace CryptographyMath {
 
+}
 
 
 #endif //CRYPTOGRAPHY_CRYPTO_H

@@ -6,11 +6,11 @@
 #define CRYPTOGRAPHY_POLYNOMIAL_MOD_2_H
 
 //#include "finite_field.h"
-#include "polynomial_modulus.h"
+#include "polynom_modulus.h"
 
 namespace FiniteField{
 //	template <>
-//	class PolynomialModulus<2, int> {
+//	class PolynomModulus<2, int> {
 //
 //	};
 }

@@ -1,0 +1,7 @@
+1) Test all the project (move-constructor, == with oneself, explicit	(int != vector))
+
+2) Save customizations of IDEA in file
+
+3) Logging
+
+4) Write your own Double for truly comparation

@@ -8,44 +8,40 @@
 #include <vector>
 #include <iostream>
 
-namespace CryptographyMath {
-
-	//----------------Too many memory copying-----------------------Unique_ptr--//
+namespace Polynomial {
 
 	template <class T>
-	class Polynomial {
+	class Polynom {
 
 	private:
 		vector<T> polynom;
 
 	public:
-		void move(Polynomial &&temp) {
+		void move(Polynom &&temp) {
 			polynom = move(temp.polynom);
 		}
 
 		explicit
-		Polynomial(){
-			polynom.push_back(0);
+		Polynom(){
+			polynom.push_back(static_cast<T>(0));
 		}
-
 		explicit
-		Polynomial(const vector<T> &vec) {
+		Polynom(const vector<T> &vec) {
 
 			for (int i = 0; i < vec.size(); i++)
 				polynom.push_back(vec[i]);
 		}
-
 		explicit
-		Polynomial(const size_t size) : polynom(size) {}
+		Polynom(const size_t size) : polynom(size) {}
 		//copy constructor
-		Polynomial(const Polynomial &obj) : polynom(obj.polynom) {}
+		Polynom(const Polynom &obj) : polynom(obj.polynom) {}
 		//move constructor
-		Polynomial(Polynomial &&temp) { this->move(temp); }
+		Polynom(Polynom &&temp) { this->move(temp); }
 
 		/*---------------Operators-------------*/
 
-//why cannot do it?
-		/*const Polynomial& operator= (Polynomial &&temp) {
+//why cannot do it?			- 	because such occasion cannot happen
+		/*const Polynom& operator= (Polynom &&temp) {
 			if ((*this) != temp) {
 				cout << &temp.polynom[0] << " ";
 				this->move(temp);
@@ -55,7 +51,7 @@ namespace CryptographyMath {
 			return (*this);
 		}*/
 
-		const Polynomial& operator= (const Polynomial &obj) {
+		const Polynom& operator= (const Polynom &obj) {
 			if ((*this) != obj) {
 				cout << &obj.polynom[0] << " ";
 				polynom = obj.polynom;
@@ -64,10 +60,10 @@ namespace CryptographyMath {
 			return (*this);
 		}
 
-		Polynomial operator+ (const Polynomial &obj) const {
-			const Polynomial &longPolynom = (size() > obj.size()) ? (*this) : obj;
-			const Polynomial &shortPolynom = (size() <= obj.size()) ? (*this) : obj;
-			Polynomial sum(longPolynom);
+		Polynom operator+ (const Polynom &obj) const {
+			const Polynom &longPolynom = (size() > obj.size()) ? (*this) : obj;
+			const Polynom &shortPolynom = (size() <= obj.size()) ? (*this) : obj;
+			Polynom sum(longPolynom);
 
 			for (int i = 0; i < shortPolynom.size(); i++)
 				sum[i] += shortPolynom[i];
@@ -82,10 +78,10 @@ namespace CryptographyMath {
 			return sum;
 		};
 
-		const Polynomial& operator+= (const Polynomial &obj) { return ((*this) = ((*this) + obj)); }
+		const Polynom& operator+= (const Polynom &obj) { return ((*this) = ((*this) + obj)); }
 
-		Polynomial operator- () const {
-			Polynomial inverse(size());
+		Polynom operator- () const {
+			Polynom inverse(size());
 
 			for (int i = 0; i < size(); i++)
 				inverse[i] = -polynom[i];
@@ -93,10 +89,10 @@ namespace CryptographyMath {
 			return inverse;
 		}
 
-		Polynomial operator- (const Polynomial &obj) const { return (*this) + (-obj); }
+		Polynom operator- (const Polynom &obj) const { return (*this) + (-obj); }
 
-		Polynomial operator* (const Polynomial &obj) const {
-			Polynomial mul((size() - 1) + (obj.size() - 1) + 1);
+		Polynom operator* (const Polynom &obj) const {
+			Polynom mul((size() - 1) + (obj.size() - 1) + 1);
 
 			for (int i = 0; i < size(); i++)
 				for (int j = 0; j < obj.size(); j++)
@@ -105,21 +101,21 @@ namespace CryptographyMath {
 			return mul;
 		}
 
-		const Polynomial& operator*= (const Polynomial &obj) { return ((*this) = ((*this) * obj)); }
+		const Polynom& operator*= (const Polynom &obj) { return ((*this) = ((*this) * obj)); }
 
 		const T &operator[](const int i) const {
 			if (i < 0 || i >= polynom.size())
-				throw out_of_range("Polynomial Exception: out of range");
+				throw out_of_range("Polynom Exception: out of range");
 			return polynom[i];
 		}
 				//code duplication - bad!!!
 		T &operator[](const int i) {
 			if (i < 0 || i >= polynom.size())
-				throw out_of_range("Polynomial Exception: out of range");
+				throw out_of_range("Polynom Exception: out of range");
 			return polynom[i];
 		}
 
-		bool operator==(const Polynomial &obj) const {
+		bool operator==(const Polynom &obj) const {
 			if (size() != obj.size())
 				return false;
 
@@ -129,7 +125,7 @@ namespace CryptographyMath {
 			return true;
 		}
 
-		bool operator!=(const Polynomial &obj) const {
+		bool operator!=(const Polynom &obj) const {
 			return (!((*this) == obj));
 		}
 
@@ -139,7 +135,7 @@ namespace CryptographyMath {
 
 		void resize(const size_t size) { polynom.resize(size); }
 
-		//I need different representaions of polynom
+		//I need different representations of polynom
 		void print(ostream &o = cout, const char delimiter = ' ') const {
 			//OutputVector::print(polynom, o, separator);
 
@@ -149,9 +145,9 @@ namespace CryptographyMath {
 			for (int i = 0; i < size(); i++)	{
 				if (i == 0)
 					o << polynom[i];
-				else if (polynom[i] != 0) {
-					o << delimiter << "+" << delimiter;
-					if (polynom[i] != 1)
+				else if (polynom[i] != static_cast<T>(0)) {
+					o << delimiter << " + " << delimiter;
+					if (polynom[i] != static_cast<T>(1))
 						o << polynom[i];
 					o << "x";
 					if (i != 1)
@@ -167,11 +163,11 @@ namespace CryptographyMath {
 		/*---------------Friendship-----------------*/
 
 		template<class S>
-		friend ostream &operator<< (ostream &o, const Polynomial<S> &p);
+		friend ostream &operator<< (ostream &o, const Polynom<S> &p);
 	};
 
 	template <class S>
-	ostream &operator<< (ostream &o, const Polynomial<S> &p){
+	ostream &operator<< (ostream &o, const Polynom<S> &p){
 		p.print(o);
 		return o;
 	}
