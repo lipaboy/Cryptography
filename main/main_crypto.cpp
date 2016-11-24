@@ -9,7 +9,13 @@ using namespace CryptographyMath;
 int main(void)
 {
 	try {
-getFieldElement(5, 0);
+		Polynom<int> s1;
+		s1.push_back(5);
+		s1.push_back(3);
+		Polynom<int> s2 = s1;
+		Polynom<int> s3 = s1 + s2;
+		cout << s3 << endl;
+
 		PolynomModulus<5> p1,
 					p2;
 
@@ -21,11 +27,13 @@ getFieldElement(5, 0);
 		p2 = p1;
 		cout << p2 << endl;
 		//cout << p1 << " + " << p2 << " = " << p1 + p2 << endl;
-
-		PolynomModulus<3, Complex<double> > p3;
-		p3.push_back(Complex<double>(5));
-		p3.push_back(Complex<double>(0, 3));
+		PolynomModulus<5> p3 = p1 + p2;
 		cout << p3 << endl;
+
+		/*PolynomModulus<3, Complex<double> > p3;
+		p3.push_back(Complex<double>(5.0, 4.0));
+		p3.push_back(Complex<double>(0.0, 3.0));*/
+		//cout << p3 << endl;
 
 		//no Complex<int>
 	}

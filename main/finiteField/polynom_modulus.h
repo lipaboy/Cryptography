@@ -13,7 +13,7 @@ namespace FiniteField {
 
 	//maybe I need to do wrapper to interrupt producing more and more constructors
 
-	//maybe CastToFieldElementCustomization is unnecessary?
+	//maybe CastCustom is unnecessary?
 
 	//template for module (characteristic) of field
 	//Is modulus prime?
@@ -21,24 +21,24 @@ namespace FiniteField {
 	class PolynomModulus {
 
 	public:
-		enum CastToFieldElementCustomization {
+		enum CastCustom {		//customization of casting to field elements
 			Auto,
 			ByHand
 		};
 	private:
 		Polynom<T> polynom;
-		CastToFieldElementCustomization custom;
+		CastCustom custom;
 
 	public:
 
 		explicit
-		PolynomModulus(CastToFieldElementCustomization cust = Auto) : polynom(), custom(cust) {
+		PolynomModulus(CastCustom cust = Auto) : polynom(), custom(cust) {
 			if (modulus < 2)
 				throw WrongTemplateParameterValueException();
 		}
 
 		explicit
-		PolynomModulus(const vector<T> &vec, CastToFieldElementCustomization cust = Auto) : custom(cust) {
+		PolynomModulus(const vector<T> &vec, CastCustom cust = Auto) : custom(cust) {
 			if (modulus < 2)
 				throw WrongTemplateParameterValueException();
 
@@ -47,8 +47,11 @@ namespace FiniteField {
 		}
 
 		explicit
-		PolynomModulus(const size_t size, CastToFieldElementCustomization cust = Auto)
-				: custom(cust), polynom(size) {}
+		PolynomModulus(const size_t size, CastCustom cust = Auto)
+				: custom(cust), polynom(size) {
+			if (modulus < 2)
+				throw WrongTemplateParameterValueException();
+		}
 
 		//copy constructor
 		PolynomModulus(const PolynomModulus &obj) : custom(obj.custom), polynom(obj.polynom) {}
@@ -63,15 +66,13 @@ namespace FiniteField {
 
 		const PolynomModulus &operator=(const PolynomModulus &obj) {
 			if ((*this) != obj) {
-				//cout << &obj.polynom[0] << " ";
 				polynom = obj.polynom;
-				//cout << &polynom[0] << " ";
 				custom = obj.custom;
 			}
 			return (*this);
 		}
 
-		PolynomModulus operator+(const PolynomModulus &obj) const {
+		PolynomModulus&& operator+(const PolynomModulus &obj) const {
 			const PolynomModulus &longPolynom = (size() > obj.size()) ? (*this) : obj;
 			const PolynomModulus &shortPolynom = (size() <= obj.size()) ? (*this) : obj;
 			PolynomModulus sum(longPolynom);
@@ -79,18 +80,21 @@ namespace FiniteField {
 			if (custom == ByHand)
 				sum.polynom += shortPolynom.polynom;
 			else {
-				for (int i = 0; i < shortPolynom.size(); i++)
-					sum[i] = ConversionToFieldElements::getFieldElement(sum[i] + shortPolynom[i], modulus);
-
 				//the power of polynom can decrease by addition
 				size_t newSize = sum.size();
-				for (size_t i = sum.size() - 1; (i >= 0) && (sum[i] % modulus == 0); i--)
-					--newSize;
+				bool isCanResize = true;
+				for (size_t i = sum.size() - 1; i >= 0; i--) {
+					sum.polynom[i] = ConversionToFieldElements::getFieldElement(sum.polynom[i], modulus);
+					if (sum.polynom[i] != 0)
+						isCanResize = false;
+					if (isCanResize)
+						--newSize;
+				}
 
 				sum.resize(newSize);
 			}
 
-			return sum;
+			return move(sum);
 		};
 
 		PolynomModulus operator-() const {        //I don't know cast To Field Elements or not
@@ -153,17 +157,15 @@ namespace FiniteField {
 
 		const size_t size() const { return polynom.size(); }
 
-		void setCustomization(const CastToFieldElementCustomization cust) { custom = cust; }
+		void setCustomization(const CastCustom cust) { custom = cust; }
 
 		void resize(const size_t size) { polynom.resize(size); }
 
-		void print(ostream &o = cout, const char delimiter = ' ') const { polynom.print(o, delimiter); }
+		void print(ostream &o = cout, const char delimiter = ' ') const { printAlgebricForm(polynom, o, delimiter); }
 
 
 		/*---------------Friendship-----------------*/
 
-		template<int m, class S>
-		friend ostream &operator<<(ostream &o, const PolynomModulus<m, S> &p);
 	};
 
 	template<int modulus, class S>

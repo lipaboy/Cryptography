@@ -70,8 +70,8 @@ namespace FiniteField {
 
 	template<class T>
 	T getFieldElement(T number, int modulus) throw(DivisionByZeroException) {
-		//if (modulus == 0)
-		//	throw DivisionByZeroException();
+		if (modulus == 0)
+			throw DivisionByZeroException();
 
 		ConversionToFieldElements::getFieldElement(number, modulus);
 	}

@@ -10,6 +10,12 @@
 
 namespace Polynomial {
 
+	class WrongResizeParameterException : public logic_error {
+	public:
+		explicit
+		WrongResizeParameterException() : logic_error("Polynomial error: resize parameter must be positive.") {}
+	};
+
 	template <class T>
 	class Polynom {
 
@@ -17,14 +23,10 @@ namespace Polynomial {
 		vector<T> polynom;
 
 	public:
-		void move(Polynom &&temp) {
-			polynom = move(temp.polynom);
-		}
+		void move(Polynom &&temp) {	polynom = temp.polynom; }
 
 		explicit
-		Polynom(){
-			polynom.push_back(static_cast<T>(0));
-		}
+		Polynom(){ polynom.push_back(static_cast<T>(0)); }
 		explicit
 		Polynom(const vector<T> &vec) {
 
@@ -52,15 +54,33 @@ namespace Polynomial {
 		}*/
 
 		const Polynom& operator= (const Polynom &obj) {
-			if ((*this) != obj) {
-				cout << &obj.polynom[0] << " ";
+			if ((*this) != obj)
 				polynom = obj.polynom;
-				cout << &polynom[0] << " ";
-			}
 			return (*this);
 		}
 
-		Polynom operator+ (const Polynom &obj) const {
+		const Polynom& operator+= (const Polynom &obj) {
+			if (obj.size() > size())
+				resize(obj.size());
+			for (size_t i = 0; i < size(); i++)
+				polynom[i] += obj.polynom[i];
+			//the power of polynom can decrease by addition
+			size_t newSize = size();
+			for (size_t i = size() - 1; (i >= 0) && (polynom[i] == static_cast<T>(0)); i--)
+				--newSize;
+
+			resize(newSize);
+			return (*this);
+		}
+
+		Polynom&& operator+ (const Polynom &obj) const {
+			Polynom sum(*this);
+
+			sum += obj;
+			return std::move(sum);
+		}
+
+		/*Polynom&& operator+ (const Polynom &obj) const {
 			const Polynom &longPolynom = (size() > obj.size()) ? (*this) : obj;
 			const Polynom &shortPolynom = (size() <= obj.size()) ? (*this) : obj;
 			Polynom sum(longPolynom);
@@ -75,18 +95,18 @@ namespace Polynomial {
 
 			sum.resize(newSize);
 
-			return sum;
+			return move(sum);
 		};
 
-		const Polynom& operator+= (const Polynom &obj) { return ((*this) = ((*this) + obj)); }
+		const Polynom& operator+= (const Polynom &obj) { return ((*this) = ((*this) + obj)); }*/
 
-		Polynom operator- () const {
+		Polynom&& operator- () const {
 			Polynom inverse(size());
 
 			for (int i = 0; i < size(); i++)
 				inverse[i] = -polynom[i];
 
-			return inverse;
+			return std::move(inverse);
 		}
 
 		Polynom operator- (const Polynom &obj) const { return (*this) + (-obj); }
@@ -133,42 +153,40 @@ namespace Polynomial {
 
 		const size_t size() const { return polynom.size(); }
 
-		void resize(const size_t size) { polynom.resize(size); }
-
-		//I need different representations of polynom
-		void print(ostream &o = cout, const char delimiter = ' ') const {
-			//OutputVector::print(polynom, o, separator);
-
-			if (size() > 1)
-				cout << "(";
-
-			for (int i = 0; i < size(); i++)	{
-				if (i == 0)
-					o << polynom[i];
-				else if (polynom[i] != static_cast<T>(0)) {
-					o << delimiter << " + " << delimiter;
-					if (polynom[i] != static_cast<T>(1))
-						o << polynom[i];
-					o << "x";
-					if (i != 1)
-						o << "^" << i;
-				}
-			}
-
-			if (size() > 1)
-				cout << ")";
+		void resize(const size_t size) throw(WrongResizeParameterException) {
+			if (size < 1)
+				throw WrongResizeParameterException();
+			polynom.resize(size);
 		}
 
-
-		/*---------------Friendship-----------------*/
-
-		template<class S>
-		friend ostream &operator<< (ostream &o, const Polynom<S> &p);
 	};
+
+	//I need different representations of polynom
+	template <class T>
+	void printAlgebricForm(const Polynom<T>& polynom, ostream &o = cout, const char delimiter = ' ') {
+		if (polynom.size() > 1)
+			cout << "(";
+
+		for (int i = 0; i < polynom.size(); i++)	{
+			if (i == 0)
+				o << polynom[i];
+			else if (polynom[i] != static_cast<T>(0)) {
+				o << delimiter << "+" << delimiter;
+				if (polynom[i] != static_cast<T>(1))
+					o << polynom[i];
+				o << "x";
+				if (i != 1)
+					o << "^" << i;
+			}
+		}
+
+		if (polynom.size() > 1)
+			cout << ")";
+	}
 
 	template <class S>
 	ostream &operator<< (ostream &o, const Polynom<S> &p){
-		p.print(o);
+		printAlgebricForm(p, o);
 		return o;
 	}
 }
