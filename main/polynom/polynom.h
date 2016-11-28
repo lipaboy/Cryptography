@@ -23,22 +23,20 @@ namespace Polynomial {
 		vector<T> polynom;
 
 	public:
-		void move(Polynom &&temp) {	polynom = temp.polynom; }
+
 
 		explicit
 		Polynom(){ polynom.push_back(static_cast<T>(0)); }
 		explicit
-		Polynom(const vector<T> &vec) {
-
-			for (int i = 0; i < vec.size(); i++)
-				polynom.push_back(vec[i]);
-		}
+		Polynom(const vector<T> &vec) : polynom(vec) {}
+		explicit
+		Polynom(vector<T> &&vec) { polynom = std::move(vec); }
 		explicit
 		Polynom(const size_t size) : polynom(size) {}
 		//copy constructor
 		Polynom(const Polynom &obj) : polynom(obj.polynom) {}
 		//move constructor
-		Polynom(Polynom &&temp) { this->move(temp); }
+		Polynom(Polynom &&temp) { polynom = temp.polynom; }
 
 		/*---------------Operators-------------*/
 
@@ -59,6 +57,11 @@ namespace Polynomial {
 			return (*this);
 		}
 
+		const Polynom& operator= (Polynom &&obj) {
+			polynom = std::move(obj.polynom);
+			return (*this);
+		}
+
 		const Polynom& operator+= (const Polynom &obj) {
 			if (obj.size() > size())
 				resize(obj.size());
@@ -73,11 +76,13 @@ namespace Polynomial {
 			return (*this);
 		}
 
+		//Polynom&& operator+= (const Polynom &obj) { return Polynom((*this) += obj); }
+
 		Polynom&& operator+ (const Polynom &obj) const {
 			Polynom sum(*this);
 
-			sum += obj;
-			return std::move(sum);
+			sum = (Polynom(*this) += obj);
+			return (Polynom(*this));
 		}
 
 		/*Polynom&& operator+ (const Polynom &obj) const {
