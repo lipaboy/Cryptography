@@ -22,21 +22,33 @@ namespace Polynomial {
 	private:
 		vector<T> polynom;
 
-	public:
+		explicit
+		Polynom(const vector<T> &first, const vector<T> &second) {
+			resize((first.size() > second.size()) ? first.size() : second.size());
+			for (size_t i = 0; i < size(); i++)
+				polynom[i] = first[i] + second[i];
+			//the power of polynom can decrease by addition
+			size_t newSize = size();
+			for (size_t i = size() - 1; (i >= 0) && (polynom[i] == static_cast<T>(0)); i--)
+				--newSize;
 
+			resize(newSize);
+		}
+
+	public:
 
 		explicit
 		Polynom(){ polynom.push_back(static_cast<T>(0)); }
 		explicit
 		Polynom(const vector<T> &vec) : polynom(vec) {}
 		explicit
-		Polynom(vector<T> &&vec) { polynom = std::move(vec); }
+		Polynom(vector<T> &&vec) { std::swap(vec, polynom); }
 		explicit
 		Polynom(const size_t size) : polynom(size) {}
 		//copy constructor
 		Polynom(const Polynom &obj) : polynom(obj.polynom) {}
 		//move constructor
-		Polynom(Polynom &&temp) { polynom = temp.polynom; }
+		Polynom(Polynom &&temp) { swap(*this, temp); }
 
 		/*---------------Operators-------------*/
 
@@ -58,32 +70,21 @@ namespace Polynomial {
 		}
 
 		const Polynom& operator= (Polynom &&obj) {
-			polynom = std::move(obj.polynom);
+			swap(*this, obj);
 			return (*this);
 		}
 
-		const Polynom& operator+= (const Polynom &obj) {
-			if (obj.size() > size())
-				resize(obj.size());
-			for (size_t i = 0; i < size(); i++)
-				polynom[i] += obj.polynom[i];
-			//the power of polynom can decrease by addition
-			size_t newSize = size();
-			for (size_t i = size() - 1; (i >= 0) && (polynom[i] == static_cast<T>(0)); i--)
-				--newSize;
+		Polynom&& operator+ (const Polynom &obj) const {
+			return std::move(Polynom(polynom, obj.polynom));
+		}
 
-			resize(newSize);
+		const Polynom& operator+= (const Polynom &obj) {
+			(*this) = (*this) + obj;
 			return (*this);
 		}
 
 		//Polynom&& operator+= (const Polynom &obj) { return Polynom((*this) += obj); }
 
-		Polynom&& operator+ (const Polynom &obj) const {
-			Polynom sum(*this);
-
-			sum = (Polynom(*this) += obj);
-			return (Polynom(*this));
-		}
 
 		/*Polynom&& operator+ (const Polynom &obj) const {
 			const Polynom &longPolynom = (size() > obj.size()) ? (*this) : obj;
@@ -105,13 +106,13 @@ namespace Polynomial {
 
 		const Polynom& operator+= (const Polynom &obj) { return ((*this) = ((*this) + obj)); }*/
 
-		Polynom&& operator- () const {
+		Polynom operator- () const {
 			Polynom inverse(size());
 
 			for (int i = 0; i < size(); i++)
 				inverse[i] = -polynom[i];
 
-			return std::move(inverse);
+			return inverse;
 		}
 
 		Polynom operator- (const Polynom &obj) const { return (*this) + (-obj); }
@@ -164,6 +165,11 @@ namespace Polynomial {
 			polynom.resize(size);
 		}
 
+		//		Friendship		//
+		friend void swap(Polynom<T>& first, Polynom<T>& second) noexcept {
+			std::swap(first.polynom, second.polynom);
+			std::cout << "move swap" << endl;
+		}
 	};
 
 	//I need different representations of polynom
