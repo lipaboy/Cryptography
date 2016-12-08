@@ -18,18 +18,12 @@ namespace Polynomial {
 
 	template <class T>
 	class Polynom {
-
 	private:
 		vector<T> polynom;
 
-		explicit
-		Polynom(const vector<T> &first, const vector<T> &second) {
-			resize((first.size() > second.size()) ? first.size() : second.size());
-			for (size_t i = 0; i < size(); i++)
-				polynom[i] = first[i] + second[i];
-			//the power of polynom can decrease by addition
+		void removeZeroElements() {
 			size_t newSize = size();
-			for (size_t i = size() - 1; (i >= 0) && (polynom[i] == static_cast<T>(0)); i--)
+			for (size_t i = size() - 1; (i >= 0) && ((*this)[i] == static_cast<T>(0)); i--)
 				--newSize;
 
 			resize(newSize);
@@ -37,18 +31,20 @@ namespace Polynomial {
 
 	public:
 
-		explicit
 		Polynom(){ polynom.push_back(static_cast<T>(0)); }
-		explicit
+
 		Polynom(const vector<T> &vec) : polynom(vec) {}
-		explicit
+
 		Polynom(vector<T> &&vec) { std::swap(vec, polynom); }
-		explicit
+
 		Polynom(const size_t size) : polynom(size) {}
 		//copy constructor
 		Polynom(const Polynom &obj) : polynom(obj.polynom) {}
 		//move constructor
-		Polynom(Polynom &&temp) { swap(*this, temp); }
+		/*Polynom(Polynom &&temp) : Polynom() {
+			swap(*this, temp);
+			std::cout << "bad move" << endl;
+		}*/
 
 		/*---------------Operators-------------*/
 
@@ -69,13 +65,22 @@ namespace Polynomial {
 			return (*this);
 		}
 
-		const Polynom& operator= (Polynom &&obj) {
+		/*const Polynom& operator= (Polynom &&obj) {
 			swap(*this, obj);
+			std::cout << "bad move" << endl;
+			//(*this).polynom = obj.polynom;
 			return (*this);
-		}
+		}*/
 
-		Polynom&& operator+ (const Polynom &obj) const {
-			return std::move(Polynom(polynom, obj.polynom));
+		Polynom operator+ (const Polynom &obj) const {
+			Polynom sum((size() > obj.size()) ? size() : obj.size());
+
+			for (size_t i = 0; i < size(); i++)
+				sum[i] = (*this)[i] + obj[i];
+			//the power of polynom can decrease by addition
+			sum.removeZeroElements();
+
+			return sum;
 		}
 
 		const Polynom& operator+= (const Polynom &obj) {
@@ -166,10 +171,12 @@ namespace Polynomial {
 		}
 
 		//		Friendship		//
-		friend void swap(Polynom<T>& first, Polynom<T>& second) noexcept {
+		/*template<class S>
+		friend void swap(Polynom<S>& first, Polynom<S>& second){
 			std::swap(first.polynom, second.polynom);
 			std::cout << "move swap" << endl;
-		}
+		}*/
+
 	};
 
 	//I need different representations of polynom

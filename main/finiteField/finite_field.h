@@ -10,7 +10,7 @@
 #include <memory>
 #include <cmath>
 #include "complexNumbers/complex_numbers.h"
-#include "../iovector/iovector.h"
+#include "vector_extra/iovector.h"
 
 
 using namespace std;
@@ -65,11 +65,11 @@ namespace FiniteField {
 		class PolynomModulus;
 
 		template<class T>
-		friend T getFieldElement(T number, int modulus) throw(DivisionByZeroException);
+		friend  T getFieldElement(T number, int modulus) throw(DivisionByZeroException);
 	};
 
 	template<class T>
-	T getFieldElement(T number, int modulus) throw(DivisionByZeroException) {
+	 T getFieldElement(T number, int modulus) throw(DivisionByZeroException) {
 		if (modulus == 0)
 			throw DivisionByZeroException();
 

@@ -31,13 +31,11 @@ namespace FiniteField {
 
 	public:
 
-		explicit
 		PolynomModulus(CastCustom cust = Auto) : polynom(), custom(cust) {
 			if (modulus < 2)
 				throw WrongTemplateParameterValueException();
 		}
 
-		explicit
 		PolynomModulus(const vector<T> &vec, CastCustom cust = Auto) : custom(cust) {
 			if (modulus < 2)
 				throw WrongTemplateParameterValueException();
@@ -46,7 +44,6 @@ namespace FiniteField {
 				polynom.push_back(ConversionToFieldElements::getFieldElement(vec[i], modulus));
 		}
 
-		explicit
 		PolynomModulus(const size_t size, CastCustom cust = Auto)
 				: custom(cust), polynom(size) {
 			if (modulus < 2)
@@ -72,7 +69,7 @@ namespace FiniteField {
 			return (*this);
 		}
 
-		PolynomModulus&& operator+(const PolynomModulus &obj) const {
+		PolynomModulus operator+(const PolynomModulus &obj) const {
 			const PolynomModulus &longPolynom = (size() > obj.size()) ? (*this) : obj;
 			const PolynomModulus &shortPolynom = (size() <= obj.size()) ? (*this) : obj;
 			PolynomModulus sum(longPolynom);
@@ -94,7 +91,7 @@ namespace FiniteField {
 				sum.resize(newSize);
 			}
 
-			return move(sum);
+			return sum;
 		};
 
 		PolynomModulus operator-() const {        //I don't know cast To Field Elements or not
@@ -173,6 +170,30 @@ namespace FiniteField {
 		p.print(o);
 		return o;
 	}
+
+	template <int modulus>
+	class ElementInt {
+	private:
+		int elem;
+	public:
+		ElementInt(int val) : elem(getFieldElement(val)) {}
+
+		ElementInt operator+(const ElementInt& obj) {
+			return ElementInt(elem + obj.elem);
+		}
+
+		int getFieldElement(int val) {
+			if (modulus == 2)
+				return abs(val % modulus);
+			return val % modulus - ((2 * std::abs(val % modulus) <= modulus) ? 0 : sign(val) * modulus);
+		}
+
+		int get() const {}
+
+	};
 }
+
+
+
 
 #endif //CRYPTOGRAPHY_POLYNOMIALMODULUS_H

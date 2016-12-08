@@ -24,8 +24,6 @@ namespace OutputVector {
 		return o;
 	}
 
-	//void print(const vector<int> &vec, ostream &o = cout, const char separator = ' ');
-
 }
 
 #endif //CRYPTOGRAPHY_IOVECTOR_H

@@ -1,7 +1,5 @@
 1) Test all the project (move-constructor, == with oneself, explicit	(int != vector))
 
-2) Save customizations of IDEA in file
-
 3) Logging
 
 4) Write your own Double for truly comparation
@@ -11,3 +9,6 @@
 	- friend swap - why?
 	- ADL and friend functions: if friend function defined in class then which kind of namespace this
 	    function locate in?
+almost but not fully undestanding...
+
+6) vector arithmetics (substitution operator +, +=, - and etc.)
