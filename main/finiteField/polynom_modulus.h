@@ -196,6 +196,10 @@ namespace FiniteField {
 			return val % modulus - ((2 * std::abs(val % modulus) <= modulus) ? 0 : sign(val) * modulus);
 		}
 	public:
+		FieldElement() : elem(0) {
+			if (modulus < 2)
+				throw WrongTemplateParameterValueException();
+		}
 		FieldElement(int val) : elem(castToFieldElement(val)) {
 			if (modulus < 2)
 				throw WrongTemplateParameterValueException();
@@ -223,6 +227,9 @@ namespace FiniteField {
 		FieldElement operator-(const FieldElement& obj) const {	return (*this) + (-obj); }
 
 		//division, subtraction
+
+		bool operator!=(const FieldElement& obj) const { return (elem != obj.elem); }
+		bool operator==(const FieldElement& obj) const { return !((*this) != obj); }
 
 		int get() const { return elem; }
 	};

@@ -11,7 +11,7 @@ using namespace CryptographyMath;
 int main(void)
 {
 	try {
-		vector<int> vec;
+		/*vector<int> vec;
 		vec.push_back(2);
 		vec.push_back(3);
 		Polynom<int> s1 = Polynom<int>(vec);
@@ -20,14 +20,20 @@ int main(void)
 		cout << s1 << endl;
 		Polynom<int> s2 = s1 + s1;
 		Polynom<int> s3(Polynom<int>(s2 + s1));
-		cout << s3 << endl;
+		cout << s3 << endl;*/
 
-		FieldElement<int, 5> a(2),
-				b(3);
+		//FieldElement<int, 5> a(2),
+		//		b(3);
+		//cout << a + b + 1 << endl;
 
-		cout << a << endl;
+		Polynom<FieldElement<int, 2> > ps, ts;
+		ps.push_back(1);
+		ps.push_back(1);
+		ps.push_back(1);
+		ps.push_back(1);
 
-		cout << a << endl;
+		ts = ps;
+		cout << ps+ ps << endl;
 
 
 

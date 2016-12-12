@@ -23,7 +23,7 @@ namespace Polynomial {
 	class Polynom {
 	protected:
 		vector<T> polynom;
-		const T ZERO_ELEMENT = ZERO_ELEMENT;
+		const T ZERO_ELEMENT = static_cast<T>(0);
 
 		//I don't sure whether this method justify itself or not
 //		void removeZeroElements() {
