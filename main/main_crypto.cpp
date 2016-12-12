@@ -22,8 +22,13 @@ int main(void)
 		Polynom<int> s3(Polynom<int>(s2 + s1));
 		cout << s3 << endl;
 
-		ElementInt<5> a(2),
+		FieldElement<int, 5> a(2),
 				b(3);
+
+		cout << a << endl;
+
+		cout << a << endl;
+
 
 
 		//A::bar();

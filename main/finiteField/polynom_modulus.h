@@ -171,26 +171,71 @@ namespace FiniteField {
 		return o;
 	}
 
-	template <int modulus>
-	class ElementInt {
-	private:
-		int elem;
+	template <class T, int modulus>
+	class FieldElement {
+	protected:
+		T elem;
+
+		virtual T castToFieldElement(T val);
 	public:
-		ElementInt(int val) : elem(getFieldElement(val)) {}
+		virtual T get() const {}
+	};
 
-		ElementInt operator+(const ElementInt& obj) {
-			return ElementInt(elem + obj.elem);
-		}
+	template<class T, int modulus>
+	ostream& operator<<(ostream& o, FieldElement<T, modulus> fieldElement) {
+		return (o << fieldElement.get());
+	};
 
-		int getFieldElement(int val) {
+	template <int modulus>
+	class FieldElement<int, modulus> {
+		int elem;
+
+		virtual int castToFieldElement(int val) {
 			if (modulus == 2)
 				return abs(val % modulus);
 			return val % modulus - ((2 * std::abs(val % modulus) <= modulus) ? 0 : sign(val) * modulus);
 		}
+	public:
+		FieldElement(int val) : elem(castToFieldElement(val)) {
+			if (modulus < 2)
+				throw WrongTemplateParameterValueException();
+		}
 
-		int get() const {}
+		const FieldElement& operator=(int val) {
+			elem = castToFieldElement(val);
+		}
 
+		//selectors
+
+		FieldElement operator+(const int val) const { return FieldElement(elem + val); }
+		FieldElement operator+(const FieldElement& obj) const {	return (*this) + obj.elem; }
+		const FieldElement& operator+=(const int val) {
+			elem = castToFieldElement(elem + val);
+			return (*this);
+		}
+		const FieldElement& operator+=(const FieldElement& obj) { return (*this) += obj.elem; }
+		FieldElement operator*(const FieldElement& obj) const {	return FieldElement(elem * obj.elem); }
+		const FieldElement& operator*=(const FieldElement& obj) {
+			elem = castToFieldElement(elem * obj.elem);
+			return (*this);
+		}
+		FieldElement operator-() const { return FieldElement(-elem); }
+		FieldElement operator-(const FieldElement& obj) const {	return (*this) + (-obj); }
+
+		//division, subtraction
+
+		int get() const { return elem; }
 	};
+
+
+
+//	template<>
+//	class FieldElement<2> {
+//	protected:
+//		virtual int castToFieldElement(int val) {
+//			return abs(val % 2);
+//		}
+//	};
 }
 
 

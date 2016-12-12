@@ -90,7 +90,6 @@ namespace Polynomial {
 
 		//Polynom&& operator+= (const Polynom &obj) { return Polynom((*this) += obj); }
 
-
 		/*Polynom&& operator+ (const Polynom &obj) const {
 			const Polynom &longPolynom = (size() > obj.size()) ? (*this) : obj;
 			const Polynom &shortPolynom = (size() <= obj.size()) ? (*this) : obj;
