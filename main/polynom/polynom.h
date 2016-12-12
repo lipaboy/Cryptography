@@ -7,6 +7,9 @@
 
 #include <vector>
 #include <iostream>
+#include "vector_extra/vector_arithmetics.h"
+
+using namespace VectorArithmetics;
 
 namespace Polynomial {
 
@@ -18,24 +21,26 @@ namespace Polynomial {
 
 	template <class T>
 	class Polynom {
-	private:
+	protected:
 		vector<T> polynom;
+		const T ZERO_ELEMENT = ZERO_ELEMENT;
 
-		void removeZeroElements() {
-			size_t newSize = size();
-			for (size_t i = size() - 1; (i >= 0) && ((*this)[i] == static_cast<T>(0)); i--)
-				--newSize;
-
-			resize(newSize);
-		}
+		//I don't sure whether this method justify itself or not
+//		void removeZeroElements() {
+//			size_t newSize = size();
+//			for (size_t i = size() - 1; (i > 0) && ((*this)[i] == ZERO_ELEMENT); i--)
+//				--newSize;
+//
+//			resize(newSize);
+//		}
 
 	public:
+				//one element must be in Polynom
+		Polynom(){ polynom.push_back(ZERO_ELEMENT); }
 
-		Polynom(){ polynom.push_back(static_cast<T>(0)); }
+		Polynom(const vector<T> &vec) : polynom(vec) {  }
 
-		Polynom(const vector<T> &vec) : polynom(vec) {}
-
-		Polynom(vector<T> &&vec) { std::swap(vec, polynom); }
+		Polynom(vector<T> &&vec) { std::swap(vec, polynom);  }
 
 		Polynom(const size_t size) : polynom(size) {}
 		//copy constructor
@@ -75,51 +80,22 @@ namespace Polynomial {
 		Polynom operator+ (const Polynom &obj) const {
 			Polynom sum((size() > obj.size()) ? size() : obj.size());
 
-			for (size_t i = 0; i < size(); i++)
-				sum[i] = (*this)[i] + obj[i];
+			sum.polynom = polynom + obj.polynom;
 			//the power of polynom can decrease by addition
-			sum.removeZeroElements();
-
+			//sum.removeZeroElements();
 			return sum;
 		}
 
 		const Polynom& operator+= (const Polynom &obj) {
-			(*this) = (*this) + obj;
+			polynom += obj.polynom;
 			return (*this);
 		}
 
-		//Polynom&& operator+= (const Polynom &obj) { return Polynom((*this) += obj); }
-
-		/*Polynom&& operator+ (const Polynom &obj) const {
-			const Polynom &longPolynom = (size() > obj.size()) ? (*this) : obj;
-			const Polynom &shortPolynom = (size() <= obj.size()) ? (*this) : obj;
-			Polynom sum(longPolynom);
-
-			for (int i = 0; i < shortPolynom.size(); i++)
-				sum[i] += shortPolynom[i];
-
-							//the power of polynom can decrease by addition
-			size_t newSize = sum.size();
-			for (size_t i = sum.size() - 1; (i >= 0) && (sum[i] == 0); i--)
-				--newSize;
-
-			sum.resize(newSize);
-
-			return move(sum);
-		};
-
-		const Polynom& operator+= (const Polynom &obj) { return ((*this) = ((*this) + obj)); }*/
-
 		Polynom operator- () const {
-			Polynom inverse(size());
-
-			for (int i = 0; i < size(); i++)
-				inverse[i] = -polynom[i];
-
-			return inverse;
+			return Polynom(-polynom);
 		}
 
-		Polynom operator- (const Polynom &obj) const { return (*this) + (-obj); }
+		Polynom operator- (const Polynom &obj) const { return Polynom(polynom - obj.polynom); }
 
 		Polynom operator* (const Polynom &obj) const {
 			Polynom mul((size() - 1) + (obj.size() - 1) + 1);
@@ -150,7 +126,7 @@ namespace Polynomial {
 				return false;
 
 			for (int i = 0; i < size(); i++)
-				if (static_cast<T>(0) != polynom[i] - obj[i])
+				if (ZERO_ELEMENT != polynom[i] - obj[i])
 					return false;
 			return true;
 		}
@@ -159,7 +135,7 @@ namespace Polynomial {
 			return (!((*this) == obj));
 		}
 
-		void push_back(T elem) { polynom.push_back(elem); }
+		void push_back(T elem) { if (elem != ZERO_ELEMENT) polynom.push_back(elem); }
 
 		const size_t size() const { return polynom.size(); }
 
