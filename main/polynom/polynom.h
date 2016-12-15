@@ -27,8 +27,8 @@ namespace Polynomial {
 
 		//I don't sure whether this method justify itself or not
 //		void removeZeroElements() {
-//			size_t newSize = size();
-//			for (size_t i = size() - 1; (i > 0) && ((*this)[i] == ZERO_ELEMENT); i--)
+//			size_t newSize = degree();
+//			for (size_t i = degree() - 1; (i > 0) && ((*this)[i] == ZERO_ELEMENT); i--)
 //				--newSize;
 //
 //			resize(newSize);
@@ -64,7 +64,7 @@ namespace Polynomial {
 			return (*this);
 		}*/
 
-		const Polynom& operator= (const Polynom &obj) {
+		virtual const Polynom& operator= (const Polynom &obj) {
 			if ((*this) != obj)
 				polynom = obj.polynom;
 			return (*this);
@@ -77,8 +77,8 @@ namespace Polynomial {
 			return (*this);
 		}*/
 
-		Polynom operator+ (const Polynom &obj) const {
-			Polynom sum((size() > obj.size()) ? size() : obj.size());
+		virtual Polynom operator+ (const Polynom &obj) const {
+			Polynom sum((degree() > obj.degree()) ? degree() : obj.degree());
 
 			sum.polynom = polynom + obj.polynom;
 			//the power of polynom can decrease by addition
@@ -86,28 +86,28 @@ namespace Polynomial {
 			return sum;
 		}
 
-		const Polynom& operator+= (const Polynom &obj) {
+		virtual const Polynom& operator+= (const Polynom &obj) {
 			polynom += obj.polynom;
 			return (*this);
 		}
 
-		Polynom operator- () const {
+		virtual Polynom operator- () const {
 			return Polynom(-polynom);
 		}
 
-		Polynom operator- (const Polynom &obj) const { return Polynom(polynom - obj.polynom); }
+		virtual Polynom operator- (const Polynom &obj) const { return Polynom(polynom - obj.polynom); }
 
-		Polynom operator* (const Polynom &obj) const {
-			Polynom mul((size() - 1) + (obj.size() - 1) + 1);
+		virtual Polynom operator* (const Polynom &obj) const {
+			Polynom mul((degree() - 1) + (obj.degree() - 1) + 1);
 
-			for (int i = 0; i < size(); i++)
-				for (int j = 0; j < obj.size(); j++)
+			for (int i = 0; i < degree(); i++)
+				for (int j = 0; j < obj.degree(); j++)
 					mul[i + j] += (*this)[i] * obj[j];
 
 			return mul;
 		}
 
-		const Polynom& operator*= (const Polynom &obj) { return ((*this) = ((*this) * obj)); }
+		virtual const Polynom& operator*= (const Polynom &obj) { return ((*this) = ((*this) * obj)); }
 
 		const T &operator[](const int i) const {
 			if (i < 0 || i >= polynom.size())
@@ -121,46 +121,42 @@ namespace Polynomial {
 			return polynom[i];
 		}
 
-		bool operator==(const Polynom &obj) const {
-			if (size() != obj.size())
+		virtual bool operator==(const Polynom &obj) const {
+			if (degree() != obj.degree())
 				return false;
 
-			for (int i = 0; i < size(); i++)
+			for (int i = 0; i < degree(); i++)
 				if (ZERO_ELEMENT != polynom[i] - obj[i])
 					return false;
 			return true;
 		}
 
-		bool operator!=(const Polynom &obj) const {
+		virtual bool operator!=(const Polynom &obj) const {
 			return (!((*this) == obj));
 		}
 
 		void push_back(T elem) { if (elem != ZERO_ELEMENT) polynom.push_back(elem); }
 
-		const size_t size() const { return polynom.size(); }
+		const size_t degree() const { return polynom.size(); }
 
-		void resize(const size_t size) throw(WrongResizeParameterException) {
-			if (size < 1)
-				throw WrongResizeParameterException();
-			polynom.resize(size);
-		}
-
-		//		Friendship		//
-		/*template<class S>
-		friend void swap(Polynom<S>& first, Polynom<S>& second){
-			std::swap(first.polynom, second.polynom);
-			std::cout << "move swap" << endl;
-		}*/
+		void resize(const size_t size) throw(WrongResizeParameterException);
 
 	};
+
+	template<class T>
+	void Polynom<T>::resize(const size_t size) throw(WrongResizeParameterException) {
+		if (size < 1)
+			throw WrongResizeParameterException();
+		polynom.resize(size);
+	}
 
 	//I need different representations of polynom
 	template <class T>
 	void printAlgebricForm(const Polynom<T>& polynom, ostream &o = cout, const char delimiter = ' ') {
-		if (polynom.size() > 1)
+		if (polynom.degree() > 1)
 			cout << "(";
 
-		for (int i = 0; i < polynom.size(); i++)	{
+		for (int i = 0; i < polynom.degree(); i++)	{
 			if (i == 0)
 				o << polynom[i];
 			else if (polynom[i] != static_cast<T>(0)) {
@@ -173,7 +169,7 @@ namespace Polynomial {
 			}
 		}
 
-		if (polynom.size() > 1)
+		if (polynom.degree() > 1)
 			cout << ")";
 	}
 

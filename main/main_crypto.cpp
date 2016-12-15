@@ -34,10 +34,6 @@ int main(void)
 
 		ts = ps;
 		cout << ps+ ps << endl;
-
-
-
-		//A::bar();
 	}
 	catch (logic_error exp){
 		cout << exp.what();
