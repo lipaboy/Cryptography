@@ -7,7 +7,7 @@
 
 #include "polynom/polynom.h"
 
-using namespace Polynomial;
+using namespace MonicPolynomial;
 
 namespace FiniteField {
 
@@ -55,9 +55,8 @@ namespace FiniteField {
 	class FieldElement<int, modulus> {
 		int elem;
 
+		//TODO: you can write specialization with modulus = 2 because returning value of this function would be easier
 		virtual int castToFieldElement(int val) {
-			if (modulus == 2)
-				return abs(val % modulus);
 			return val % modulus - ((2 * std::abs(val % modulus) <= modulus) ? 0 : sign(val) * modulus);
 		}
 	public:
@@ -90,6 +89,7 @@ namespace FiniteField {
 		}
 		FieldElement operator-() const { return FieldElement(-elem); }
 		FieldElement operator-(const FieldElement& obj) const {	return (*this) + (-obj); }
+		const FieldElement& operator-=(const FieldElement& obj) { return (*this) -= obj; }
 
 		//division, subtraction
 

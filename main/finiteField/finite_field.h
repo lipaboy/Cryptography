@@ -29,7 +29,7 @@ namespace FiniteField {
 	class FiniteFieldException : public logic_error {
 	public:
 		explicit
-		FiniteFieldException(const string &str) : logic_error(str) {}
+		FiniteFieldException(string &&str) : logic_error(str) {}
 
 	};
 

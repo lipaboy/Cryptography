@@ -15,4 +15,3 @@ set(SOURCE_FILES
 
 add_executable(runCryptographyMain ${SOURCE_FILES})
 
-

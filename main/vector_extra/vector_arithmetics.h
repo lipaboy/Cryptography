@@ -34,6 +34,7 @@ namespace VectorArithmetics {
 			first.resize(second.size());
 		for (size_t i = 0; i < first.size(); i++)
 			first[i] += second[i];
+		return first;
 	}
 
 	template <class T>
@@ -48,18 +49,18 @@ namespace VectorArithmetics {
 	vector<T> operator- (const vector<T>& first, const vector<T>& second) {
 		const vector<T> & min = ((first.size() <= second.size()) ? first : second);
 		const vector<T> & max = ((first.size() > second.size()) ? first : second);
-		vector<T> sum(max.size());
+		vector<T> sub(max.size());
 
 		for (size_t i = 0; i < min.size(); i++)
-			sum[i] = first[i] - second[i];		//save commutative property
+			sub[i] = first[i] - second[i];		//save commutative property
 		if (max == first)
 			for (size_t i = min.size(); i < max.size(); i++)
-				sum[i] = first[i];
+				sub[i] = first[i];
 		else
 			for (size_t i = min.size(); i < max.size(); i++)
-				sum[i] = static_cast<T>(0) - second[i];
+				sub[i] = static_cast<T>(0) - second[i];
 
-		return sum;
+		return sub;
 	}
 
 	template <class T>
@@ -68,6 +69,7 @@ namespace VectorArithmetics {
 			first.resize(second.size());
 		for (size_t i = 0; i < first.size(); i++)
 			first[i] -= second[i];
+		return first;
 	}
 
 	//void print(const vector<int> &vec, ostream &o = cout, const char separator = ' ');

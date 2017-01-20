@@ -13,7 +13,7 @@
 #include "polynom/polynom.h"
 
 using namespace FiniteField;
-using namespace Polynomial;
+using namespace MonicPolynomial;
 
 namespace CryptographyMath {
 

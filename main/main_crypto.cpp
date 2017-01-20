@@ -27,13 +27,16 @@ int main(void)
 		//cout << a + b + 1 << endl;
 
 		Polynom<FieldElement<int, 2> > ps, ts;
-		ps.push_back(1);
-		ps.push_back(1);
-		ps.push_back(1);
-		ps.push_back(1);
+		ps.push(4);
+		ps.push(3);
 
 		ts = ps;
-		cout << ps+ ps << endl;
+		cout <<  ps + ps << endl;
+
+		vector<int> a, b;
+		a.push_back(5);
+		b.push_back(3);
+		cout << (a -= b) << endl;
 	}
 	catch (logic_error exp){
 		cout << exp.what();

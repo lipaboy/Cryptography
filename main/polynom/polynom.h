@@ -11,58 +11,53 @@
 
 using namespace VectorArithmetics;
 
-namespace Polynomial {
+namespace MonicPolynomial {
 
-	class WrongResizeParameterException : public logic_error {
+	class PolynomialException : public logic_error {
 	public:
 		explicit
-		WrongResizeParameterException() : logic_error("Polynomial error: resize parameter must be positive.") {}
+		PolynomialException(string &&str) : logic_error("MonicPolynomial error: " + str) {}
 	};
 
+	class WrongResizeParameterException : public PolynomialException {
+	public:
+		explicit
+		WrongResizeParameterException() : PolynomialException("resize parameter must be positive") {}
+	};
+
+	class NegativeDegreeValueException : public PolynomialException {
+	public:
+		explicit
+		NegativeDegreeValueException() : PolynomialException("highestDegree cannot be negative") {}
+	};
+
+	//BAD 1: When I modify class Polynom<t> I always need to remember that size = highestDegree + 1
+	//BAD 2: may be to many methods. Think about Collections in Java
 	template <class T>
 	class Polynom {
 	protected:
 		vector<T> polynom;
 		const T ZERO_ELEMENT = static_cast<T>(0);
+		/*
+		 //I don't sure whether this method justify itself or not
+		void removeZeroElements() {
+			size_t newSize = highestDegree();
+			for (size_t i = highestDegree() - 1; (i > 0) && ((*this)[i] == ZERO_ELEMENT); i--)
+				--newSize;
 
-		//I don't sure whether this method justify itself or not
-//		void removeZeroElements() {
-//			size_t newSize = degree();
-//			for (size_t i = degree() - 1; (i > 0) && ((*this)[i] == ZERO_ELEMENT); i--)
-//				--newSize;
-//
-//			resize(newSize);
-//		}
-
+			resize(newSize);
+		}*/
 	public:
 				//one element must be in Polynom
 		Polynom(){ polynom.push_back(ZERO_ELEMENT); }
 
 		Polynom(const vector<T> &vec) : polynom(vec) {  }
-
+		//TODO: I will interest by move-and-swap idiom
 		Polynom(vector<T> &&vec) { std::swap(vec, polynom);  }
 
-		Polynom(const size_t size) : polynom(size) {}
-		//copy constructor
 		Polynom(const Polynom &obj) : polynom(obj.polynom) {}
-		//move constructor
-		/*Polynom(Polynom &&temp) : Polynom() {
-			swap(*this, temp);
-			std::cout << "bad move" << endl;
-		}*/
 
 		/*---------------Operators-------------*/
-
-//why cannot do it?			- 	because such occasion cannot happen
-		/*const Polynom& operator= (Polynom &&temp) {
-			if ((*this) != temp) {
-				cout << &temp.polynom[0] << " ";
-				this->move(temp);
-				cout << &polynom[0] << " ";
-				//custom = temp.custom;
-			}
-			return (*this);
-		}*/
 
 		virtual const Polynom& operator= (const Polynom &obj) {
 			if ((*this) != obj)
@@ -70,93 +65,95 @@ namespace Polynomial {
 			return (*this);
 		}
 
-		/*const Polynom& operator= (Polynom &&obj) {
-			swap(*this, obj);
-			std::cout << "bad move" << endl;
-			//(*this).polynom = obj.polynom;
-			return (*this);
-		}*/
-
-		virtual Polynom operator+ (const Polynom &obj) const {
-			Polynom sum((degree() > obj.degree()) ? degree() : obj.degree());
-
-			sum.polynom = polynom + obj.polynom;
-			//the power of polynom can decrease by addition
-			//sum.removeZeroElements();
-			return sum;
-		}
+		virtual Polynom operator+ (const Polynom &obj) const;
 
 		virtual const Polynom& operator+= (const Polynom &obj) {
 			polynom += obj.polynom;
 			return (*this);
 		}
 
-		virtual Polynom operator- () const {
-			return Polynom(-polynom);
-		}
+		virtual Polynom operator- () const { return Polynom(-polynom); }
 
 		virtual Polynom operator- (const Polynom &obj) const { return Polynom(polynom - obj.polynom); }
 
-		virtual Polynom operator* (const Polynom &obj) const {
-			Polynom mul((degree() - 1) + (obj.degree() - 1) + 1);
+		virtual const Polynom& operator-= (const Polynom &obj) {
+			polynom -= obj.polynom;
+			return (*this);
+		}
 
-			for (int i = 0; i < degree(); i++)
-				for (int j = 0; j < obj.degree(); j++)
+		virtual Polynom operator* (const Polynom &obj) const {
+//			Polynom mul((highestDegree() - 1) + (obj.highestDegree() - 1) + 1);
+			Polynom mul;
+
+			for (int i = 0; i < highestDegree(); i++)
+				for (int j = 0; j < obj.highestDegree(); j++)
 					mul[i + j] += (*this)[i] * obj[j];
 
 			return mul;
 		}
 
+		//TODO: you can rewrite it for example: "copy-paste" code from operator* if you don't want to do
+		//TODO: extra allocating memory and copying
 		virtual const Polynom& operator*= (const Polynom &obj) { return ((*this) = ((*this) * obj)); }
 
-		const T &operator[](const int i) const {
-			if (i < 0 || i >= polynom.size())
-				throw out_of_range("Polynom Exception: out of range");
-			return polynom[i];
-		}
-				//code duplication - bad!!!
-		T &operator[](const int i) {
-			if (i < 0 || i >= polynom.size())
-				throw out_of_range("Polynom Exception: out of range");
-			return polynom[i];
-		}
+				//code duplication - bad!!! (or not?)
+		virtual T &operator[](const int degree) { return polynom[degree]; }
 
-		virtual bool operator==(const Polynom &obj) const {
-			if (degree() != obj.degree())
-				return false;
+		virtual void set(int degree, int coefficient);
 
-			for (int i = 0; i < degree(); i++)
-				if (ZERO_ELEMENT != polynom[i] - obj[i])
-					return false;
-			return true;
-		}
+		virtual void push(int coefficient) { set(1 + highestDegree(), coefficient); }
 
-		virtual bool operator!=(const Polynom &obj) const {
-			return (!((*this) == obj));
-		}
+		//-----------------------------Select methods-----------------------------------------------
 
-		void push_back(T elem) { if (elem != ZERO_ELEMENT) polynom.push_back(elem); }
+		//we cannot get address from element polynom[i] because returning value is rvalue - nonsense
+		virtual const T& operator[](const int degree) const { return polynom[degree]; }
 
-		const size_t degree() const { return polynom.size(); }
+		virtual bool operator==(const Polynom &obj) const;
 
-		void resize(const size_t size) throw(WrongResizeParameterException);
+		virtual bool operator!=(const Polynom &obj) const { return (!((*this) == obj)); }
+
+		//size cannot be zero
+		virtual const int highestDegree() const { return static_cast<int>(polynom.size() - 1); }
 
 	};
 
-	template<class T>
-	void Polynom<T>::resize(const size_t size) throw(WrongResizeParameterException) {
-		if (size < 1)
-			throw WrongResizeParameterException();
-		polynom.resize(size);
+	template <class T>
+	void Polynom<T>::set(int degree, int coefficient) {
+		if (degree > highestDegree())
+			polynom.resize(static_cast<size_t>(degree + 1));
+		polynom[degree] = coefficient;
+	}
+
+	template <class T>
+	Polynom<T> Polynom<T>::operator+ (const Polynom &obj) const {
+		Polynom sum;
+		sum.polynom.resize(static_cast<size_t>(1 + (highestDegree() > obj.highestDegree())
+											   ? highestDegree() : obj.highestDegree()));
+
+		sum.polynom = polynom + obj.polynom;
+		//the power of polynom can decrease by addition
+		//sum.removeZeroElements();
+		return sum;
+	}
+
+	template <class T>
+	bool Polynom<T>::operator==(const Polynom &obj) const {
+		if (highestDegree() != obj.highestDegree())
+			return false;
+
+		for (int i = 0; i <= highestDegree(); i++)
+			if (ZERO_ELEMENT != (*this)[i] - obj[i])
+				return false;
+		return true;
 	}
 
 	//I need different representations of polynom
 	template <class T>
 	void printAlgebricForm(const Polynom<T>& polynom, ostream &o = cout, const char delimiter = ' ') {
-		if (polynom.degree() > 1)
+		if (polynom.highestDegree() > 0)
 			cout << "(";
 
-		for (int i = 0; i < polynom.degree(); i++)	{
+		for (int i = 0; i <= polynom.highestDegree(); i++)	{
 			if (i == 0)
 				o << polynom[i];
 			else if (polynom[i] != static_cast<T>(0)) {
@@ -169,7 +166,7 @@ namespace Polynomial {
 			}
 		}
 
-		if (polynom.degree() > 1)
+		if (polynom.highestDegree() > 0)
 			cout << ")";
 	}
 
