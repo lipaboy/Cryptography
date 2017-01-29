@@ -12,18 +12,23 @@ using namespace CryptographyMath;
 int main(void)
 {
 	try {
-//Polynom<Complex<double>> p;
+/*Polynom<Complex<double>> p;
 		Algebra1 a;
 		cout << (((a + a).operator*()) + 5) << endl;
-		//(a + a);
-//		cout << (a + 5) << endl;
+		(a + a);
+		cout << (a + 5) << endl;
 		shared_ptr<Derived> b(new Derived());
 		shared_ptr<ISummarize> ref(b->sum(b));
 		shared_ptr<Derived> ref2(b->sum(b));
-		//ref.ISummarize&().
-		//ISummarize & sum = ref;
+		ref.ISummarize&().
+		ISummarize & sum = ref;*/
 
-		cout << ref->get() << endl;
+		Derived a, b;
+		ISummarize &refA = a,
+			&refB = b;
+
+
+		//cout << (refA + refB).get() << endl;
 
 	}
 	catch (logic_error exp){
