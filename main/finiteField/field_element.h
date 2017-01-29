@@ -51,8 +51,40 @@ namespace FiniteField {
 		return (o << fieldElement.get());
 	};
 
+//	template <class T>
+//	class Algebra {
+//	private:
+//	public:
+//		virtual Algebra operator+(const Algebra& elem);
+//	};
+
+	class Algebra;
+	//TODO: typedef shared_ptr<Algebra> Algebra
+	class Algebra {
+	public:
+		//virtual Algebra operator+(const Algebra& elem) const;
+		virtual int operator+(int a) = 0;
+		virtual shared_ptr<Algebra> operator+(const Algebra& alg) const = 0;
+	};
+	class Algebra1
+		: public virtual Algebra
+	{
+	public:
+		virtual int operator+(int a) { return a++; }
+		virtual shared_ptr<Algebra> operator+(const Algebra& alg) const {
+			try {
+				const Algebra1 &a1 = dynamic_cast<const Algebra1 &>(alg);
+				return make_shared<Algebra1>();
+			} catch(bad_cast exp) {
+				cout << exp.what() << endl;
+			}
+		}
+	};
+
 	template <int modulus>
-	class FieldElement<int, modulus> {
+	class FieldElement<int, modulus>
+			//: public Algebra
+	{
 		int elem;
 
 		//TODO: you can write specialization with modulus = 2 because returning value of this function would be easier

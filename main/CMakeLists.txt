@@ -11,7 +11,7 @@ set(SOURCE_FILES
         finiteField/finite_field.h
         main_crypto.cpp
         numberPropertiesAlgorithms/number_properties_algorithms.h
-        finiteField/field_element.h vector_extra/vector_arithmetics.h)
+        finiteField/field_element.h vector_extra/vector_arithmetics.h algebraInterfaces/ISummarize.h)
 
 add_executable(runCryptographyMain ${SOURCE_FILES})
 

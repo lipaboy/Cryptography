@@ -10,3 +10,7 @@
 	- ADL and friend functions: if friend function defined in class then which kind of namespace this
 	    function locate in?
 almost but not fully undestanding...
+
+5) Rewrite makefile
+    - learn how write MakeFile to evoid re-compilition of files
+    - may be it is necessary to add makefile at each package

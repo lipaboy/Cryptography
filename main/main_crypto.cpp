@@ -6,43 +6,31 @@
 
 using namespace CryptographyMath;
 
+#include "algebraInterfaces/ISummarize.h"
 
 
 int main(void)
 {
 	try {
-		/*vector<int> vec;
-		vec.push_back(2);
-		vec.push_back(3);
-		Polynom<int> s1 = Polynom<int>(vec);
-		s1.push_back(5);
-		s1.push_back(3);
-		cout << s1 << endl;
-		Polynom<int> s2 = s1 + s1;
-		Polynom<int> s3(Polynom<int>(s2 + s1));
-		cout << s3 << endl;*/
+//Polynom<Complex<double>> p;
+		Algebra1 a;
+		cout << (((a + a).operator*()) + 5) << endl;
+		//(a + a);
+//		cout << (a + 5) << endl;
+		shared_ptr<Derived> b(new Derived());
+		shared_ptr<ISummarize> ref(b->sum(b));
+		shared_ptr<Derived> ref2(b->sum(b));
+		//ref.ISummarize&().
+		//ISummarize & sum = ref;
 
-		//FieldElement<int, 5> a(2),
-		//		b(3);
-		//cout << a + b + 1 << endl;
+		cout << ref->get() << endl;
 
-		Polynom<FieldElement<int, 2> > ps, ts;
-		ps.push(4);
-		ps.push(3);
-
-		ts = ps;
-		cout <<  ps + ps << endl;
-
-		vector<int> a, b;
-		a.push_back(5);
-		b.push_back(3);
-		cout << (a -= b) << endl;
 	}
 	catch (logic_error exp){
-		cout << exp.what();
+		cout << exp.what() << endl;
 	}
 	catch (runtime_error exp){
-		cout << exp.what();
+		cout << exp.what() << endl;
 	}
 
 	return 0;
