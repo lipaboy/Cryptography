@@ -19,24 +19,27 @@ class ISummarize;
 class Derived;
 
 template <class T>
-class SharedCastPtr : public shared_ptr<T> {
+class SharedCastPtr {
+private:
+	shared_ptr<T> ptr;
 public:
-	SharedCastPtr() : shared_ptr<T>() {}
-	SharedCastPtr(T *ptr) : shared_ptr<T>(ptr) {}
+	SharedCastPtr(T *ptr1) : ptr(ptr1) {}
+	SharedCastPtr(shared_ptr<T> ptr1) : ptr(ptr1) {}
 
 	template <class S>
 	const SharedCastPtr<T>& operator=(const SharedCastPtr<S>& obj2)
 	{
-		if (nullptr == obj2)
-			(*this).reset();		//*this = nullptr
+		if (nullptr == obj2.ptr)
+			ptr.reset();		//*this = nullptr
 		else {
-			this->operator=(dynamic_pointer_cast<T>(obj2));
-
-			if (nullptr == (*this))
+			ptr = dynamic_pointer_cast<T>(obj2.ptr);
+			if (nullptr == ptr)
 				throw BadDynamicCastException();
 		}
 		return *this;
 	}
+
+
 
 	/*const SharedCastPtr<T>& operator=(const shared_ptr<T>& obj2)
 	{
