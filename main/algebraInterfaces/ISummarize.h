@@ -9,29 +9,58 @@
 
 using namespace std;
 
-class ISummarize;
-
-class Refer {
+class BadDynamicCastException : public logic_error {
 public:
-	shared_ptr<ISummarize> ptr;
+	explicit
+	BadDynamicCastException() : logic_error("Bad dynamic cast exception") {}
+};
 
-//	operator ISummarize&() {
-//		return *ptr;
-//	}
+class ISummarize;
+class Derived;
 
-	const Refer& operator=(const shared_ptr<ISummarize> &obj) {
-		if (ptr != obj)
-			ptr = obj;
+template <class T>
+class SharedCastPtr : public shared_ptr<T> {
+public:
+	SharedCastPtr() : shared_ptr<T>() {}
+	SharedCastPtr(T *ptr) : shared_ptr<T>(ptr) {}
+
+	template <class S>
+	const SharedCastPtr<T>& operator=(const SharedCastPtr<S>& obj2)
+	{
+		if (nullptr == obj2)
+			(*this).reset();		//*this = nullptr
+		else {
+			this->operator=(dynamic_pointer_cast<T>(obj2));
+
+			if (nullptr == (*this))
+				throw BadDynamicCastException();
+		}
 		return *this;
 	}
 
-
+	/*const SharedCastPtr<T>& operator=(const shared_ptr<T>& obj2)
+	{
+		//if (this->get() != obj2.get())
+		shared_ptr<T> &ref = (*this);
+		ref = obj2;
+		return *this;
+	}*/
 };
 
-/*template <ISummarize T>
-shared_ptr*/
+/*template< class T, class U >
+std::SharedCastPtr<T> dynamic_pointer_cast( const std::SharedCastPtr<U>& r ) noexcept
+{
+	if (auto p = dynamic_cast<typename std::SharedCastPtr<T>::element_type*>(r.get())) {
+		return std::SharedCastPtr<T>(r, p);
+	} else {
+		return std::SharedCastPtr<T>();
+	}
+}*/
 
-//Not interface
+
+
+
+
 class ISummarize {
 public:
 	ISummarize() {}
@@ -58,5 +87,7 @@ public:
 		return a;
 	}
 };
+
+
 
 #endif //CRYPTOGRAPHY_ISUMMARIZE_H

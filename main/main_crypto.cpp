@@ -22,13 +22,18 @@ int main(void)
 		shared_ptr<Derived> ref2(b->sum(b));
 		ref.ISummarize&().
 		ISummarize & sum = ref;*/
+		SharedCastPtr<Derived> ptr(new Derived()),
+			ptr2 = ptr,
+			ptr3 = ptr2;
 
-		Derived a, b;
-		ISummarize &refA = a,
-			&refB = b;
+		SharedCastPtr<ISummarize> sum;
+		sum = ptr;
+		//ptr2 = sum;
+		cout << (sum->get()) << " " << ptr2->get() << endl;
 
-
-		//cout << (refA + refB).get() << endl;
+		//cout << ptr.use_count() << " " << ptr2.use_count() << " " << ptr3.use_count() << endl;
+shared_ptr<int> p(new int(5));
+		p.
 
 	}
 	catch (logic_error exp){

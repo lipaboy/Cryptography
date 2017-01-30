@@ -41,9 +41,9 @@ namespace FiniteField {
 	protected:
 		T elem;
 
-		virtual T castToFieldElement(T val);
+		virtual T castToFieldElement(T val) = 0;
 	public:
-		virtual T get() const;
+		virtual T get() const = 0;
 	};
 
 	template<class T, int modulus>
