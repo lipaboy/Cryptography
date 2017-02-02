@@ -2,7 +2,7 @@
 // Created by artem on 8/8/16.
 //
 
-#include "number_properties_algorithms.h"
+#include "PropertiesOfNumbers.h"
 
 namespace JacobySymbol {
 

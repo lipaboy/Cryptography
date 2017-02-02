@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <iostream>
-#include "vector_extra/vector_arithmetics.h"
+#include "vectorExtraFuncs/VectorArithmetics.h"
 
 using namespace VectorArithmetics;
 
@@ -105,7 +105,7 @@ namespace MonicPolynomial {
 
 		//-----------------------------Select methods-----------------------------------------------
 
-		//we cannot get address from element polynom[i] because returning value is rvalue - nonsense
+		//we cannot get address from element monicPolynomial[i] because returning value is rvalue - nonsense
 		virtual const T& operator[](const int degree) const { return polynom[degree]; }
 
 		virtual bool operator==(const Polynom &obj) const;
@@ -131,7 +131,7 @@ namespace MonicPolynomial {
 											   ? highestDegree() : obj.highestDegree()));
 
 		sum.polynom = polynom + obj.polynom;
-		//the power of polynom can decrease by addition
+		//the power of monicPolynomial can decrease by addition
 		//sum.removeZeroElements();
 		return sum;
 	}
@@ -147,7 +147,7 @@ namespace MonicPolynomial {
 		return true;
 	}
 
-	//I need different representations of polynom
+	//I need different representations of monicPolynomial
 	template <class T>
 	void printAlgebricForm(const Polynom<T>& polynom, ostream &o = cout, const char delimiter = ' ') {
 		if (polynom.highestDegree() > 0)

@@ -3,7 +3,7 @@
 //
 
 #include <cmath>
-#include "number_properties_algorithms.h"
+#include "PropertiesOfNumbers.h"
 
 namespace PropertiesOfNumbers {
 

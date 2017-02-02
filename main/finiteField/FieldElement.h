@@ -5,7 +5,7 @@
 #ifndef CRYPTOGRAPHY_POLYNOMIALMODULUS_H
 #define CRYPTOGRAPHY_POLYNOMIALMODULUS_H
 
-#include "polynom/polynom.h"
+#include "monicPolynomial/Polynom.h"
 
 using namespace MonicPolynomial;
 

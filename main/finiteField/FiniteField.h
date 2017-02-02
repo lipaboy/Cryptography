@@ -9,8 +9,8 @@
 #include <vector>
 #include <memory>
 #include <cmath>
-#include "complexNumbers/complex_numbers.h"
-#include "vector_extra/iovector.h"
+#include "complexNumbers/Complex.h"
+#include "vectorExtraFuncs/OutputVector.h"
 
 
 using namespace std;
@@ -47,7 +47,7 @@ namespace FiniteField {
 }
 
 //template for module (characteristic) of field
-#include "field_element.h"
+#include "FieldElement.h"
 
 
 #endif //CRYPTOGRAPHY_FINITEFIELD_H

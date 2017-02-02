@@ -7,10 +7,10 @@
 
 #include <vector>
 #include <iostream>
-#include "vector_extra/iovector.h"
-#include <complexNumbers/complex_numbers.h>
-#include "finiteField/finite_field.h"
-#include "polynom/polynom.h"
+#include "vectorExtraFuncs/OutputVector.h"
+#include <complexNumbers/Complex.h>
+#include "finiteField/FiniteField.h"
+#include "monicPolynomial/Polynom.h"
 
 using namespace FiniteField;
 using namespace MonicPolynomial;

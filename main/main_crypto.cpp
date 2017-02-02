@@ -2,11 +2,11 @@
 // Created by artem on 8/12/16.
 //
 
-#include "crypto.h"
+#include "CryptographyMath.h"
 
 using namespace CryptographyMath;
 
-#include "algebraInterfaces/ISummarize.h"
+#include "algebraInterfaces/IAddition.h"
 
 
 int main(void)
@@ -18,22 +18,25 @@ int main(void)
 		(a + a);
 		cout << (a + 5) << endl;
 		shared_ptr<Derived> b(new Derived());
-		shared_ptr<ISummarize> ref(b->sum(b));
+		shared_ptr<IAddition> ref(b->sum(b));
 		shared_ptr<Derived> ref2(b->sum(b));
-		ref.ISummarize&().
-		ISummarize & sum = ref;*/
-		SharedCastPtr<Derived> ptr(new Derived()),
-			ptr2 = ptr,
-			ptr3 = ptr2;
+		ref.IAddition&().
+		IAddition & sum = ref;*/
+		SharedInheritPtr<Derived> ptr(new Derived());
+		SharedInheritPtr<IAlgebra<int> > ptr1 = ptr, ptr2 = ptr;
 
-		SharedCastPtr<ISummarize> sum;
-		sum = ptr;
-		//ptr2 = sum;
-		cout << (sum->get()) << " " << ptr2->get() << endl;
+		//cout << (ptr1 + ptr2)->get() << endl;
+		ptr1 = ptr1->add(ptr2);
+		cout << ptr1->get() << endl;
+
+		Opa<Derived> opa;
+		opa.doSmth();
+		//Opa<int> opp;
+		//opp.doSmth();
 
 		//cout << ptr.use_count() << " " << ptr2.use_count() << " " << ptr3.use_count() << endl;
-shared_ptr<int> p(new int(5));
-		p.
+//shared_ptr<int> p(new int(5));
+	//	p.
 
 	}
 	catch (logic_error exp){
