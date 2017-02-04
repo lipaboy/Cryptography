@@ -8,18 +8,19 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
 
 namespace OutputVector {
 
+	//using namespace std;
+
 	template <class T>
-	void print(const vector<T> &vec, ostream &o = cout, const char separator = ' ') {
+	void print(const std::vector<T> &vec, std::ostream &o = std::cout, const char separator = ' ') {
 		for (int i = 0; i < vec.size(); i++)
 			o << vec[i] << separator;
 	}
 
 	template <class T>
-	ostream &operator<< (ostream &o, const vector<T> &vec){
+	std::ostream &operator<< (std::ostream &o, const std::vector<T> &vec){
 		print(vec, o);
 		return o;
 	}

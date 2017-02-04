@@ -9,14 +9,12 @@
 #include <iostream>
 #include "vectorExtraFuncs/VectorArithmetics.h"
 
-using namespace VectorArithmetics;
-
 namespace MonicPolynomial {
 
-	class PolynomialException : public logic_error {
+	class PolynomialException : public std::logic_error {
 	public:
 		explicit
-		PolynomialException(string &&str) : logic_error("MonicPolynomial error: " + str) {}
+		PolynomialException(std::string &&str) : logic_error("MonicPolynomial error: " + str) {}
 	};
 
 	class WrongResizeParameterException : public PolynomialException {
@@ -36,7 +34,7 @@ namespace MonicPolynomial {
 	template <class T>
 	class Polynom {
 	protected:
-		vector<T> polynom;
+		std::vector<T> polynom;
 		const T ZERO_ELEMENT = static_cast<T>(0);
 		/*
 		 //I don't sure whether this method justify itself or not
@@ -51,9 +49,9 @@ namespace MonicPolynomial {
 				//one element must be in Polynom
 		Polynom(){ polynom.push_back(ZERO_ELEMENT); }
 
-		Polynom(const vector<T> &vec) : polynom(vec) {  }
+		Polynom(const std::vector<T> &vec) : polynom(vec) {  }
 		//TODO: I will interest by move-and-swap idiom
-		Polynom(vector<T> &&vec) { std::swap(vec, polynom);  }
+		Polynom(std::vector<T> &&vec) { std::swap(vec, polynom);  }
 
 		Polynom(const Polynom &obj) : polynom(obj.polynom) {}
 
@@ -149,9 +147,9 @@ namespace MonicPolynomial {
 
 	//I need different representations of monicPolynomial
 	template <class T>
-	void printAlgebricForm(const Polynom<T>& polynom, ostream &o = cout, const char delimiter = ' ') {
+	void printAlgebricForm(const Polynom<T>& polynom, std::ostream &o = std::cout, const char delimiter = ' ') {
 		if (polynom.highestDegree() > 0)
-			cout << "(";
+			o << "(";
 
 		for (int i = 0; i <= polynom.highestDegree(); i++)	{
 			if (i == 0)
@@ -167,11 +165,11 @@ namespace MonicPolynomial {
 		}
 
 		if (polynom.highestDegree() > 0)
-			cout << ")";
+			o << ")";
 	}
 
 	template <class S>
-	ostream &operator<< (ostream &o, const Polynom<S> &p){
+	std::ostream &operator<< (std::ostream &o, const Polynom<S> &p){
 		printAlgebricForm(p, o);
 		return o;
 	}

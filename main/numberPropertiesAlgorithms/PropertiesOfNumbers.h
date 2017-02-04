@@ -10,18 +10,18 @@
 #include <memory>
 #include <stdexcept>
 
-using namespace std;
+
 
 namespace PropertiesOfNumbers{
 
-	class InvalidArguments : public runtime_error {
-		string msg = "Runtime exception: invalid arguments. ";
+	class InvalidArguments : public std::runtime_error {
+		std::string msg = "Runtime exception: invalid arguments. ";
 	public:
 		explicit
 		InvalidArguments() : runtime_error(msg) {}
 
 		explicit
-		InvalidArguments(string str) : runtime_error(msg + str) {}
+		InvalidArguments(std::string str) : runtime_error(msg + str) {}
 	};
 
 	bool isPrime(int number);
@@ -31,13 +31,13 @@ namespace PropertiesOfNumbers{
 	//I need Exceptions
 	class EratosthenesSieve {
 	private:
-		unique_ptr<vector<bool> > pSieve;
+		std::unique_ptr<std::vector<bool> > pSieve;
 
 	public:
 		EratosthenesSieve(const int SIZE);
 
 		/* vector[i] = false   -    it means that number i isn't prime    */
-		vector<bool> get() const { return *pSieve; }
+		std::vector<bool> get() const { return *pSieve; }
 
 		bool isPrime(int number) const { return (number < pSieve->size()) ? (*pSieve)[number] : false; }
 	};

@@ -7,8 +7,6 @@
 
 #include <iostream>
 
-using namespace std;
-
 template<class T = double>
 class Complex {
 private:
@@ -64,7 +62,7 @@ public:
 	};
 
 	//bad for type "double"
-	void print(ostream &o, NumberRepresentation type) const {
+	void print(std::ostream &o, NumberRepresentation type) const {
 		switch (type) {
 			case Geometric:
 				o << '(' << real << ", " << imaginary << ')';
@@ -82,7 +80,7 @@ public:
 };
 
 template<class T>
-ostream &operator<<(ostream &o, Complex<T> complex) {
+std::ostream &operator<<(std::ostream &o, Complex<T> complex) {
 	complex.print(o, Complex<T>::NumberRepresentation::Algebraic);
 	return o;
 }

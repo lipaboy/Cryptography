@@ -5,16 +5,9 @@
 #ifndef CRYPTOGRAPHY_FINITEFIELD_H
 #define CRYPTOGRAPHY_FINITEFIELD_H
 
-#include <iostream>
-#include <vector>
 #include <memory>
 #include <cmath>
-#include "complexNumbers/Complex.h"
-#include "vectorExtraFuncs/OutputVector.h"
 
-
-using namespace std;
-using namespace OutputVector;
 
 namespace FiniteField {
 
@@ -26,10 +19,10 @@ namespace FiniteField {
 		DivisionByZeroException() : runtime_error("Runtime error: division by zero. ") {}
 	};*/
 
-	class FiniteFieldException : public logic_error {
+	class FiniteFieldException : public std::logic_error {
 	public:
 		explicit
-		FiniteFieldException(string &&str) : logic_error(str) {}
+		FiniteFieldException(std::string &&str) : std::logic_error(str) {}
 
 	};
 
@@ -42,7 +35,7 @@ namespace FiniteField {
 
 	/*-------------------Main functions--------------*/
 
-	inline int sign(int num) { return ((signbit(num) == true) ? -1 : 1); }
+	inline int sign(int num) { return ((std::signbit(num) == true) ? -1 : 1); }
 
 }
 

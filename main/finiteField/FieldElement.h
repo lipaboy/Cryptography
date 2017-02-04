@@ -5,11 +5,13 @@
 #ifndef CRYPTOGRAPHY_POLYNOMIALMODULUS_H
 #define CRYPTOGRAPHY_POLYNOMIALMODULUS_H
 
-#include "monicPolynomial/Polynom.h"
+#include "algebraInterfaces/IAlgebra.h"
 
-using namespace MonicPolynomial;
+//TODO: remove using namespace because impossible to use Derived name (cover with name from AlgebraInterfaces)
 
 namespace FiniteField {
+
+	using namespace PolymorphicTypeCasting;
 
 	//maybe I need to do wrapper to interrupt producing more and more constructors
 
@@ -36,84 +38,31 @@ namespace FiniteField {
 							   getFieldElement(number.getImaginary(), modulus));
 	}*/
 
-	template <class T, int modulus>
-	class FieldElement {
-	protected:
-		T elem;
-
-		virtual T castToFieldElement(T val) = 0;
-	public:
-		virtual T get() const = 0;
-	};
-
-	template<class T, int modulus>
-	ostream& operator<<(ostream& o, FieldElement<T, modulus> fieldElement) {
-		return (o << fieldElement.get());
-	};
-
-//	template <class T>
-//	class Algebra {
-//	private:
-//	public:
-//		virtual Algebra operator+(const Algebra& elem);
-//	};
-
-	class Algebra;
-	//TODO: typedef shared_ptr<Algebra> Algebra
-	class Algebra {
-	public:
-		//virtual Algebra operator+(const Algebra& elem) const;
-		virtual int operator+(int a) = 0;
-		virtual shared_ptr<Algebra> operator+(const Algebra& alg) const = 0;
-	};
-	class Algebra1
-		: public virtual Algebra
-	{
-	public:
-		virtual int operator+(int a) { return a++; }
-		virtual shared_ptr<Algebra> operator+(const Algebra& alg) const {
-			try {
-				const Algebra1 &a1 = dynamic_cast<const Algebra1 &>(alg);
-				return make_shared<Algebra1>();
-			} catch(bad_cast exp) {
-				cout << exp.what() << endl;
-			}
-		}
-	};
-
+	//IN FACT: no economy operations and memory
 	template <int modulus>
-	class FieldElement<int, modulus>
-			//: public Algebra
-	{
+	class FieldElement : public AlgebraInterfaces::IAlgebra<int> {
 		int elem;
 
 		//TODO: you can write specialization with modulus = 2 because returning value of this function would be easier
-		virtual int castToFieldElement(int val) {
+		int castToFieldElement(int val) {
 			return val % modulus - ((2 * std::abs(val % modulus) <= modulus) ? 0 : sign(val) * modulus);
 		}
 	public:
-		FieldElement() : elem(0) {
-			if (modulus < 2)
-				throw WrongTemplateParameterValueException();
-		}
+		//, FieldElement() - I can't write it because the execution of parameter list is undefined
 		FieldElement(int val) : elem(castToFieldElement(val)) {
 			if (modulus < 2)
 				throw WrongTemplateParameterValueException();
 		}
 
-		const FieldElement& operator=(int val) {
-			elem = castToFieldElement(val);
-		}
+		const FieldElement& operator=(int val) { elem = castToFieldElement(val); }
 
 		//selectors
 
-		FieldElement operator+(const int val) const { return FieldElement(elem + val); }
-		FieldElement operator+(const FieldElement& obj) const {	return (*this) + obj.elem; }
-		const FieldElement& operator+=(const int val) {
-			elem = castToFieldElement(elem + val);
+		FieldElement operator+(const FieldElement& obj) const {	return FieldElement(elem + obj.elem); }
+		const FieldElement& operator+=(const FieldElement& obj) {
+			elem = castToFieldElement(elem + obj.elem);
 			return (*this);
 		}
-		const FieldElement& operator+=(const FieldElement& obj) { return (*this) += obj.elem; }
 		FieldElement operator*(const FieldElement& obj) const {	return FieldElement(elem * obj.elem); }
 		const FieldElement& operator*=(const FieldElement& obj) {
 			elem = castToFieldElement(elem * obj.elem);
@@ -123,11 +72,18 @@ namespace FiniteField {
 		FieldElement operator-(const FieldElement& obj) const {	return (*this) + (-obj); }
 		const FieldElement& operator-=(const FieldElement& obj) { return (*this) -= obj; }
 
-		//division, subtraction
-
-		bool operator!=(const FieldElement& obj) const { return (elem != obj.elem); }
+		bool operator!=(const FieldElement& obj) const { return (elem != obj.elem); }	//already casted to field elems
 		bool operator==(const FieldElement& obj) const { return !((*this) != obj); }
 
+		//implementations
+
+		SharedPolymPtr<AlgebraInterfaces::IAddition> add(SharedPolymPtr<AlgebraInterfaces::IAddition> obj) const {
+			SharedPolymPtr<FieldElement> obj2 = obj;
+			SharedPolymPtr<FieldElement> sum(new FieldElement(0));
+			(*sum) = (*this) + (*obj2);
+			return sum;
+		}
+		//IGet
 		int get() const { return elem; }
 	};
 

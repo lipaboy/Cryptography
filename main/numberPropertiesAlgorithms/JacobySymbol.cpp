@@ -6,7 +6,7 @@
 
 namespace JacobySymbol {
 
-	using namespace PropertiesOfNumbers;
+	//using namespace PropertiesOfNumbers;
 
 	int jacoby(int squareResidue, int module) {
 		int value = 1;
@@ -48,15 +48,15 @@ namespace JacobySymbol {
 
 			if (module == 2)
 				jacobySymbol = (squareResidue == 0) ? 0 : 1;
-			else if (gcdByEuclid(squareResidue, module) > 1) {
-				cout << "Error: numbers must be prime one another" << endl;
+			else if (PropertiesOfNumbers::gcdByEuclid(squareResidue, module) > 1) {
+				std::cout << "Error: numbers must be prime one another" << std::endl;
 				jacobySymbol = 0;
 			}
 			else
 				jacobySymbol = jacoby(squareResidue, module);
 		}
 		else {
-			std::cout << "Error: Incorrect module (getValueJacobySymbol)" << endl;
+			std::cout << "Error: Incorrect module (getValueJacobySymbol)" << std::endl;
 			jacobySymbol = -2;
 		}
 

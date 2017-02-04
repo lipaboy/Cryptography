@@ -65,9 +65,9 @@ namespace PropertiesOfNumbers {
 	//--------------class EratosthenesSieve--------------//
 
 	//create sieve
-	EratosthenesSieve::EratosthenesSieve(const int SIZE) : pSieve(new vector<bool>(SIZE, true))
+	EratosthenesSieve::EratosthenesSieve(const int SIZE) : pSieve(new std::vector<bool>(SIZE, true))
 	{
-		vector<bool> &sieve = *pSieve;
+		std::vector<bool> &sieve = *pSieve;
 		const size_t &size = sieve.size();
 
 		for (int i = 2; i < size; i++)

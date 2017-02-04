@@ -11,7 +11,7 @@ set(SOURCE_FILES
         finiteField/FiniteField.h
         main_crypto.cpp
         numberPropertiesAlgorithms/PropertiesOfNumbers.h
-        finiteField/FieldElement.h vectorExtraFuncs/VectorArithmetics.h algebraInterfaces/IAddition.h algebraInterfaces/SharedInheritPtr.h)
+        finiteField/FieldElement.h vectorExtraFuncs/VectorArithmetics.h algebraInterfaces/IAlgebra.h polymorphicTypeCasting/SharedPolymPtr.h)
 
 add_executable(runCryptographyMain ${SOURCE_FILES})
 

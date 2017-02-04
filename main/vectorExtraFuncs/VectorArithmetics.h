@@ -8,9 +8,11 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
+
 
 namespace VectorArithmetics {
+
+	using namespace std;
 
 	//no condition on sizes of vectors (they might have different ones)
 
