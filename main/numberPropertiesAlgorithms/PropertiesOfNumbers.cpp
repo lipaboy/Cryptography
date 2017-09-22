@@ -31,9 +31,9 @@ namespace CryptographyMath {
 		std::vector<bool> &sieve = *pSieve;
 		const size_t &size = sieve.size();
 
-		for (int i = 2; i < size; i++)
+		for (int i = 2; size_t(i) < size; i++)
 			if (sieve[i] == true)	//is prime
-				for (int j = i; i * j < size; j++)
+				for (int j = i; size_t(i * j) < size; j++)
 					sieve[i * j] = false;
 
 		switch (size) {

@@ -57,10 +57,38 @@ namespace CryptographyMath {
 	}
 
 
-	/*template <class T>
+	template <class T>
 	SolvePair<T> useEuclideanAlgorithm(T const & first, T const & second) {
+		const T ZERO = static_cast<T>(0);	//or maybe change on T(0) ??
+		const T ONE = static_cast<T>(1);
+		const T TWO = static_cast<T>(2);
+		const T gcd = gcdByEuclid(first, second);
 
-	}*/
+		// we have three arrays
+		T arr[3][3] = {
+			first,	ONE,	ZERO,
+			second,	ZERO,	ONE,
+			ONE,	ZERO,	ZERO
+		};
+
+		int i;
+		int j;
+		int k;
+		for (i = 0; ; i = (i + 1) % 3) {
+			j = (i + 1) % 3;
+			k = (i + 2) % 3;
+
+			int coef = arr[i][0] / arr[j][0];
+			arr[k][0] = arr[i][0] % arr[j][0];
+			arr[k][1] = arr[i][1] - coef * arr[j][1];
+			arr[k][2] = arr[i][2] - coef * arr[j][2];
+
+			if (ZERO == arr[k][0])
+				break;
+		}
+
+		return std::make_pair(arr[j][1], arr[j][2]);
+	}
 
 	bool isPrime(int number);
 
