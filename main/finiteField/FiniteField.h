@@ -35,8 +35,7 @@ namespace FiniteField {
 
 	/*-------------------Main functions--------------*/
 
-	inline int sign(int num) { return ((std::signbit(num) == true) ? -1 : 1); }
-
+	inline int sign(int num) { return (num < 0 ? -1 : 1); }
 }
 
 //template for module (characteristic) of field
