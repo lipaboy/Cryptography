@@ -9,7 +9,7 @@
 
 //TODO: remove using namespace because impossible to use Derived name (cover with name from AlgebraInterfaces)
 
-namespace FiniteField {
+namespace CryptographyMath {
 
 	using namespace PolymorphicTypeCasting;
 

@@ -48,7 +48,7 @@ namespace JacobySymbol {
 
 			if (module == 2)
 				jacobySymbol = (squareResidue == 0) ? 0 : 1;
-			else if (PropertiesOfNumbers::gcdByEuclid(squareResidue, module) > 1) {
+			else if (CryptographyMath::gcdByEuclid(squareResidue, module) > 1) {
 				std::cout << "Error: numbers must be prime one another" << std::endl;
 				jacobySymbol = 0;
 			}

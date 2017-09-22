@@ -12,7 +12,7 @@
 #include "finiteField/FiniteField.h"
 #include "monicPolynomial/Polynom.h"
 
-using namespace FiniteField;
+//using namespace CryptographyMath;
 using namespace MonicPolynomial;
 
 namespace CryptographyMath {

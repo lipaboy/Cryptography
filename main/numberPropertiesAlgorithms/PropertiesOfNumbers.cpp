@@ -5,53 +5,14 @@
 #include <cmath>
 #include "PropertiesOfNumbers.h"
 
-namespace PropertiesOfNumbers {
+namespace CryptographyMath {
 
-
-	int gcdByEuclid(int a, int b)  {
-		int gcd = 1;
-
-		if (a < 1 || b < 1) {
-			throw InvalidArguments();
-		}
-		else if (a != 1 && b != 1) {
-
-			while (a % 2 == 0 && b % 2 == 0) {
-				a >>= 1;
-				b >>= 1;
-				gcd <<= 1;
-			}
-
-			while (a % 2 == 0)
-				a >>= 1;
-
-			while (b % 2 == 0)
-				b >>= 1;
-
-			while (a != b) {
-				if (a > b) {
-					a = (a - b) >> 1;
-					while (a % 2 == 0)
-						a >>= 1;
-				}
-				else {
-					b = (b - a) >> 1;
-					while (b % 2 == 0)
-						b >>= 1;
-				}
-			}
-
-			gcd *= a;
-		}
-
-		return gcd;
-	}
 
 	bool isPrime(int number) {
 		int radical = static_cast<int>(std::sqrt(static_cast<double>(number)));
 
-		if (radical < 2)
-			throw InvalidArguments();
+		/*if (radical < 2)
+			throw InvalidArguments();*/
 
 		for (int i = 2; i <= radical; i++)
 			if (number % i == 0)

@@ -2,16 +2,17 @@
 // Created by artem on 8/12/16.
 //
 
-#include "CryptographyMath.h"
-
-#include "algebraInterfaces/IAlgebra.h"
-
-using namespace std;
-using namespace AlgebraInterfaces;
+#include "numberPropertiesAlgorithms\PropertiesOfNumbers.h"
 
 namespace CryptographyMath {
 
 	int mainCrypto(int argc, char * argv[]) {
+		using std::cout;
+		using std::endl;
+
+		if (gcdByEuclid<int>(18, 6) == 6)
+			cout << "true" << endl;
+
 		return 0;
 	}
 

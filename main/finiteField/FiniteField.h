@@ -9,7 +9,7 @@
 #include <cmath>
 
 
-namespace FiniteField {
+namespace CryptographyMath {
 
 	/*------------Exceptions------------*/
 		//maybe it need to move at Arithmetics Exception or smth like that
