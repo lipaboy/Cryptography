@@ -4,30 +4,15 @@
 
 #include "CryptographyMath.h"
 
-using namespace CryptographyMath;
-
 #include "algebraInterfaces/IAlgebra.h"
 
 using namespace std;
 using namespace AlgebraInterfaces;
 
-int main(void)
-{
-	try {
-		typedef SharedPolymPtr<IAlgebra<int> > IAlgebraPtr;
+namespace CryptographyMath {
 
-		IAlgebraPtr a(new FieldElement<5>(1)),
-			d(new FieldElement<6>(1));
-
-		d->add(a);
+	int mainCrypto(int argc, char * argv[]) {
 
 	}
-	catch (logic_error exp){
-		cout << exp.what() << endl;
-	}
-	catch (runtime_error exp){
-		cout << exp.what() << endl;
-	}
 
-	return 0;
 }
