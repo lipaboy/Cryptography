@@ -12,7 +12,7 @@ using namespace AlgebraInterfaces;
 namespace CryptographyMath {
 
 	int mainCrypto(int argc, char * argv[]) {
-
+		return 0;
 	}
 
 }
