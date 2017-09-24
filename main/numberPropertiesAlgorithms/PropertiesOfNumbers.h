@@ -98,6 +98,14 @@ namespace CryptographyMath {
 		return std::move((contrary < 0) ? contrary + (modulus - 1) : contrary);
 	}
 
+	template <class T>
+	T modulusPower(T const & value, T const & degree, T const & modulus) {
+		T result = T(1);
+		for (T i = T(0); i < degree; i += 1) {
+			result = (result * value) % modulus;
+		}
+		return std::move(result);
+	}
 
 
 
