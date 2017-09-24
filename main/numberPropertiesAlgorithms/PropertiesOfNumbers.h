@@ -58,10 +58,10 @@ namespace CryptographyMath {
 
 
 	template <class T>
-	SolvePair<T> useEuclideanAlgorithm(T const & first, T const & second) {
-		const T ZERO = static_cast<T>(0);	//or maybe change on T(0) ??
-		const T ONE = static_cast<T>(1);
-		const T TWO = static_cast<T>(2);
+	SolvePair<T> useCommonEuclideanAlgorithm(T const & first, T const & second) {
+		const T ZERO = T(0);	//or maybe change on T(0) ??
+		const T ONE = T(1);
+		const T TWO = T(2);
 		const T gcd = gcdByEuclid(first, second);
 
 		// we have three arrays
@@ -89,6 +89,16 @@ namespace CryptographyMath {
 
 		return std::make_pair(arr[j][1], arr[j][2]);
 	}
+
+	template <class T>
+
+
+
+
+
+
+
+	// ---------------------- Old ----------------------------------- //
 
 	bool isPrime(int number);
 

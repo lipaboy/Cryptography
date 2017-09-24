@@ -13,7 +13,7 @@ namespace CryptographyMath {
 		if (gcdByEuclid<int>(18, 6) == 6)
 			cout << "true" << endl;
 
-		if (SolvePair<int>(2, -7) == useEuclideanAlgorithm<int>(18, 5))
+		if (SolvePair<int>(2, -7) == useCommonEuclideanAlgorithm<int>(18, 5))
 			cout << "true" << endl;
 
 		return 0;
