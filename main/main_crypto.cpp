@@ -10,11 +10,11 @@ namespace CryptographyMath {
 		using std::cout;
 		using std::endl;
 
-		if (gcdByEuclid<int>(18, 6) == 6)
-			cout << "true" << endl;
+		cout << (gcdByEuclid<int>(18, 6) == 6) << endl;
 
-		if (SolvePair<int>(2, -7) == useCommonEuclideanAlgorithm<int>(18, 5))
-			cout << "true" << endl;
+		cout << (SolvePair<int>(2, -7) == useCommonEuclideanAlgorithm<int>(18, 5)) << endl;
+
+		cout << (getContraryDegree<int>(5, 19) == 11) << endl;
 
 		return 0;
 	}

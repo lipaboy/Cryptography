@@ -87,13 +87,16 @@ namespace CryptographyMath {
 				break;
 		}
 
+		// TODO: check with polynom (where maybe work constructor copy but not move-one)
 		return std::make_pair(arr[j][1], arr[j][2]);
 	}
 
+	// a ^ (c * d) = 1 (mod p), where we need to find d. (! gcd(c, p - 1) == 1)
 	template <class T>
-
-
-
+	inline T getContraryDegree(T const & degree, T const & modulus) {
+		T contrary = useCommonEuclideanAlgorithm<T>(modulus - T(1), degree).second;
+		return std::move((contrary < 0) ? contrary + (modulus - 1) : contrary);
+	}
 
 
 
